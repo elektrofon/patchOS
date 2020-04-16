@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [[ $(uname) == 'Linux' ]]; then
+	if [[ -z $(lscpu | grep 'Cortex-A72') ]]; then
+		echo "This script must be run on a Raspberry PI 4"
+		exit 1
+	fi
+elif [[ $(uname) == 'Darwin' ]]; then
+	echo "This script must be run on a Raspberry PI 4"
+	exit 1
+fi
