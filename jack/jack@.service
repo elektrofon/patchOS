@@ -5,6 +5,7 @@ After=sound.target local-fs.target
 
 [Service]
 Type=notify
+User=patch
 EnvironmentFile=-/etc/jack/%i.conf
 EnvironmentFile=-%h/.config/jack/%i.conf
 ExecStart=@PREFIX@/bin/jackd $JACK_OPTIONS -d $DRIVER -d $DEVICE $DRIVER_SETTINGS

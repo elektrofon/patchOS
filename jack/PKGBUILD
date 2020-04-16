@@ -1,0 +1,57 @@
+# Maintainer: David Runge 
+# Contributor: Ray Rashif 
+# Contributor: Daniele Paolella 
+# Contributor: Philipp Überbacher 
+# Contributor: Thomas Bahn 
+
+pkgname=jack2
+pkgdesc="C++ version of the JACK low-latency audio server for multi-processor machines"
+pkgver=1.9.14
+pkgrel=1
+arch=('x86_64')
+url="https://github.com/jackaudio/jack2"
+license=('GPL2' 'LGPL2.1')
+depends=('alsa-lib' 'celt' 'dbus' 'expat' 'gcc-libs' 'glibc' 'libsamplerate'
+'opus' 'systemd-libs')
+makedepends=('libffado.so' 'waf')
+optdepends=('a2jmidid: Expose ALSA MIDI in lJACK MIDI'
+            'libffado.so: Firewire support'
+            'python-dbus: For jack_control'
+            'realtime-privileges: Acquire realtime privileges')
+provides=('jack' 'libjack.so' 'libjacknet.so' 'libjackserver.so')
+conflicts=('jack')
+replaces=('jack2-dbus')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/jackaudio/${pkgname}/archive/v${pkgver}.tar.gz")
+sha512sums=('ca9738fd5aadcb7e125f98a358437905959afebe0b792cab316fc31410e89ea3aefdb85154792a9d0a80f988aa7eff379ff5c7ac6c4bfa1d57ad3d7de7b5fdd')
+
+prepare() {
+  cd "${pkgname}-${pkgver}"
+  # copying relevant custom waf scripts and loading them specifically using
+  # wscript
+  (
+    touch __init__.py
+    mkdir -vp tools
+    cp -v waflib/extras/xcode*.py tools
+    rm -rv waflib
+    sed -e "s/load('xcode'/load('xcode', tooldir='tools'/g" \
+        -e "s/load('xcode6'/load('xcode6', tooldir='tools'/g" \
+        -i wscript
+  )
+}
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  export PYTHONPATH="${PWD}:${PYTHONPATH}"
+  waf configure --prefix=/usr \
+                --htmldir="/usr/share/doc/${pkgbase}/" \
+                --systemd-unit \
+                --classic
+  waf build
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  export PYTHONPATH="${PWD}:${PYTHONPATH}"
+  waf install --destdir="${pkgdir}"
+}
+# vim:set ts=2 sw=2 et:a
