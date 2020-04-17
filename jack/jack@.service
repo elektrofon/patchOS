@@ -1,3 +1,5 @@
+# ES8 USB vendor id/product id: 20b1:308d
+
 [Unit]
 Description=JACK server using %i.conf profile
 Documentation=man:jackd(1)
@@ -6,9 +8,10 @@ After=sound.target local-fs.target
 [Service]
 Type=notify
 User=patch
-EnvironmentFile=-/etc/jack/%i.conf
-EnvironmentFile=-%h/.config/jack/%i.conf
-ExecStart=@PREFIX@/bin/jackd $JACK_OPTIONS -d $DRIVER -d $DEVICE $DRIVER_SETTINGS
+Restart=on-failure
+RestartSec=5
+EnvironmentFile=-/home/patch/.config/jack/%i.conf
+ExecStart=/bin/jackd $JACK_OPTIONS -d $DRIVER -d $DEVICE $DRIVER_SETTINGS
 LimitRTPRIO=95
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity

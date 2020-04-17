@@ -65,7 +65,10 @@ make install
 cd /home/patch
 
 # Get patchOS repository
-git clone git@github.com:elektrofon/patchOS.git
+su patch -c "git clone https://github.com/elektrofon/patchOS.git"
+cd jackOS/jack
+su patch -c "makepkg -sA --skipchecksums --noconfirm"
+pacman -U *armv7h.pkg.tar.xz --noconfirm
 
 # Install jack service
 cp patchOS/jack/jack@.service /etc/systemd/system/jack@.service
@@ -73,3 +76,10 @@ chmod 644 /etc/systemd/system/jack@.service
 mkdir -p .config/jack
 cp patchOS/jack/jack.conf .config/jack/jack.conf
 systemctl enable jack@jack
+
+# Configure jack service to start/stop on ES-8 connect/disconnect
+cp patchOS/es8/es8.rules /etc/udev/rules.d/es8.rules
+
+# Cleanup
+rm -Rf jack2 jacktrip jackOS
+pacman -Rsu git base-devel --noconfirm
