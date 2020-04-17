@@ -1,49 +1,36 @@
-### 1. Update and upgrade (as root)
+## Building patchOS
+
+### 1. Prepare ArchLinuxARM SD card
+
+`TODO: Write detailed steps`
 
 ```sh
 $ pacman -Syu --noconfirm
 ```
 
-### 2. Install packages (as root)
+### 2. Set up patchOS (as root)
 
 ```sh
-$ pacman -S --noconfirm \
-base-devel \
-git \
-realtime-privileges \
-libffado \
-rtaudio \
-qt5-base \
-jack2
+$ cd /root
 ```
-
-### 3. Build jacktrip from source (as root)
 
 ```sh
-$ git clone https://github.com/jacktrip/jacktrip.git && \
-cd jacktrip/src && \
-./build && \
-make install
+cd /root && \
+git clone https://github.com/elektrofon/patchOS.git && \
+cd patchOS && \
+./build
 ```
 
-### 4. Prepare user (as root)
+## Creating a release
 
-```sh
-$ usermod -a -G realtime <username> && \
-usermod -a -G audio <username>
-```
-
-### 6. Create service for Jack2
+### 1. Do something
 
 ```sh
 $ 
 ```
-### 7. Cleanup (as root)
+
+### 2. Profit
 
 ```sh
-$ rm -Rf jacktrip
-```
-
-```sh
-$ pacman -Rsu git base-devel
+$ 
 ```
