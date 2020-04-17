@@ -23,14 +23,4 @@ cd patchOS && \
 
 ## Creating a release
 
-### 1. Do something
-
-```sh
-$ 
-```
-
-### 2. Profit
-
-```sh
-$ 
-```
+`TODO: Write detailed steps`
