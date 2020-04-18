@@ -47,7 +47,9 @@ pacman -S --noconfirm \
 	avahi \
 	nss-mdns \
 	python-flask \
-	python-pydbus
+	python-pydbus \
+	python-flask-socketio \
+	python-eventlet
 
 # Build jack2 from source without d-bus (Taken from jack2-git AUR PKGBUILD)
 git clone https://github.com/jackaudio/jack2.git

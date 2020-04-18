@@ -21,7 +21,8 @@
 	<meta name="theme-color" content="#ffffff">
 
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/app.css') }}">
-	<script src="{{ url_for('static', filename = 'js/app.js') }}"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 </head>
 <body>
 	<section class="section">
@@ -55,19 +56,50 @@
 					</div>
 
 					<div class="tile is-parent">
-						<div class="tile is-child">
-							<!-- <h3 class="title is-4">Let's patch!</h3> -->
-								<div class="is-divider" data-content="LET'S PATCH!"></div>
+						<section class="tile is-child startup-view">
+							<div class="is-divider" data-content="LET'S PATCH!"></div>
 							<div class="tile buttons is-centered">
-								<button class="button is-large is-link is-fullwidth" onclick="startJacktrip()">Start a server</button>
+								<button class="button is-large is-link is-fullwidth start-server-button" onclick="startServer()">Start a server</button>
 								<div class="is-divider" data-content="OR"></div>
-								<button class="button is-large is-primary is-fullwidth" onclick="stopJacktrip()">Connect to a server</button>
+								<button class="button is-large is-primary is-fullwidth" onclick="showConnectToServer()">Connect to a server</button>
+
 							</div>
-						</div>
+						</section>
+
+						<section class="tile is-child server-running-view">
+							<div class="is-divider" data-content="SERVER IS RUNNING AT"></div>
+							<div class="tile has-text-centered">
+								<p class="title is-3">255.255.255.255</p>
+							</div>
+
+							<div class="is-divider"></div>
+
+							<div class="tile buttons is-centered">
+								<button class="button is-large is-outline is-fullwidth stop-server-button" onclick="stopServer()">Stop server</button>
+							</div>
+						</section>
+
+						<section class="tile is-child client-connect-view">
+							<div class="is-divider" data-content="SERVER IP"></div>
+								<form>
+							<div class="tile buttons is-centered">
+								<div class="control">
+									<input class="input is-large" type="text" name="serverIp" placeholder="0.0.0.0" required pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}">
+								</div>
+							</div>
+
+							<div class="tile buttons is-centered">
+								<button class="button is-large is-link is-fullwidth connect-to-server-button" onclick="connectToServer()">Connect</button>
+								<button class="button is-large is-outline is-fullwidth" onclick="cancelConnectToServer()">Cancel</button>
+							</div>
+							</form>
+						</section>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
+
+	<script src="{{ url_for('static', filename = 'js/app.js') }}"></script>
 </body>
 </html>

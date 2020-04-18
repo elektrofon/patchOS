@@ -42,19 +42,23 @@ $input-shadow: none;
 // Update Bulma extension variables
 $divider-content-background-color : $beige-lighter;
 $divider-color: $grey-dark;
-// $divider-font-size: $size-5;
 	
 @import 'node_modules/bulma-extensions/bulma-divider/src/sass/index.sass';
 
 
 .logo {
-	// margin-bottom: 2em;
 	width: 66.666%;
 	max-height: 20vh;
 }
 
-.title:not(:last-child) {
-	&.has-button-margin {
-		margin-bottom: 0.5rem;
-	}
+input:not(:placeholder-shown):invalid {
+	border-color: $danger;
+}
+
+form:invalid .connect-to-server-button {
+	background-color: #FC6062;
+	border-color: $button-disabled-border-color;
+	box-shadow: $button-disabled-shadow;
+	opacity: $button-disabled-opacity;
+    pointer-events: none;
 }

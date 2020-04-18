@@ -4524,5 +4524,12 @@ a.navbar-item,
   width: 66.666%;
   max-height: 20vh; }
 
-.title:not(:last-child).has-button-margin {
-  margin-bottom: 0.5rem; }
+input:not(:placeholder-shown):invalid {
+  border-color: #f14668; }
+
+form:invalid .connect-to-server-button {
+  background-color: #FC6062;
+  border-color: #dbdbdb;
+  box-shadow: none;
+  opacity: 0.5;
+  pointer-events: none; }
