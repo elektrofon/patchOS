@@ -22,6 +22,7 @@ userdel -r -f alarm
 
 # Set hostname
 echo "patchos" > /etc/hostname
+echo "127.0.0.1 localhost.localdomain localhost patchos" >> /etc/hosts
 
 # Initialize pacman
 pacman-key --init
@@ -42,7 +43,11 @@ pacman -S --noconfirm \
 	opus \
 	libsamplerate \
 	portaudio \
-	waf
+	waf \
+	avahi \
+	nss-mdns \
+	python-flask \
+	python-pydbus
 
 # Build jack2 from source without d-bus (Taken from jack2-git AUR PKGBUILD)
 git clone https://github.com/jackaudio/jack2.git
@@ -79,6 +84,11 @@ systemctl enable jack@jack
 
 # Configure jack service to start/stop on ES-8 connect/disconnect
 cp patchOS/es8/es8.rules /etc/udev/rules.d/es8.rules
+
+# Enable and start mDNS service
+cp patchOS/control-panel/http.service /etc/avahi/services/http.service
+systemctl enable avahi-daemon
+systemctl start avahi-daemon
 
 # Cleanup
 rm -Rf jack2 jacktrip jackOS

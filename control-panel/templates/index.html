@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>patchOS Control Panel</title>
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="theme-color" content="#eff0eb">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
+	<link rel="manifest" href="/static/img/site.webmanifest">
+	<link rel="mask-icon" href="/static/img/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="/static/img/favicon.ico">
+	<meta name="msapplication-TileColor" content="#fc6062">
+	<meta name="msapplication-config" content="/static/img/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/app.css') }}">
+	<script src="{{ url_for('static', filename = 'js/app.js') }}"></script>
+</head>
+<body>
+	<section class="section">
+		<div class="container">
+			<div class="tile is-ancestor">
+				<div class="tile is-vertical">
+					<div class="tile is-parent">
+						<div class="tile is-child has-text-centered">
+							<img class="logo" src="{{ url_for('static', filename = 'img/logo.svg') }}">
+						</div>
+					</div>
+
+					<div class="tile is-vertical">
+						<div class="tile is-parent">
+							<div class="tile is-child field is-grouped is-grouped-centered">
+								<div class="control">
+									<div class="tags has-addons">
+										<span class="tag is-dark">jack</span>
+										<span class="tag is-success">running</span>
+									</div>
+								</div>
+
+								<div class="control">
+									<div class="tags has-addons">
+										<span class="tag is-dark">jacktrip</span>
+										<span class="tag is-danger">stopped</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="tile is-parent">
+						<div class="tile is-child">
+							<!-- <h3 class="title is-4">Let's patch!</h3> -->
+								<div class="is-divider" data-content="LET'S PATCH!"></div>
+							<div class="tile buttons is-centered">
+								<button class="button is-large is-link is-fullwidth" onclick="startJacktrip()">Start a server</button>
+								<div class="is-divider" data-content="OR"></div>
+								<button class="button is-large is-primary is-fullwidth" onclick="stopJacktrip()">Connect to a server</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

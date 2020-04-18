@@ -1,0 +1,19 @@
+{
+  "name": "patchos-control-panel",
+  "version": "1.0.0",
+  "description": "Control panel for patchOS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css-build": "node-sass --omit-source-map-url static/css/app.scss static/css/app.css",
+    "css-watch": "npm run css-build -- --watch",
+    "start": "npm run css-watch"
+  },
+  "author": "Rune Warhuus <hello@elektrofon.no>",
+  "license": "MIT",
+  "devDependencies": {
+    "bulma": "^0.8.2",
+    "bulma-extensions": "^6.2.7",
+    "node-sass": "^4.13.1"
+  }
+}

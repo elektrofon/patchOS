@@ -32,3 +32,8 @@ cscope.po.out
 ########
 
 *.log
+
+# NODE #
+########
+
+node_modules
