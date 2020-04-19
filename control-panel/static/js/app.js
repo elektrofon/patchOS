@@ -4,6 +4,8 @@ const startServerButton = document.querySelector('.start-server-button');
 const startupViewElement = document.querySelector('.startup-view');
 const serverRunningViewElement = document.querySelector('.server-running-view');
 const clientConnectViewElement = document.querySelector('.client-connect-view');
+const jackStatusElement = document.querySelector('.jack-status');
+const jacktripStatusElement = document.querySelector('.jacktrip-status');
 
 startupViewElement.style.display = 'none';
 serverRunningViewElement.style.display = 'none';
@@ -40,6 +42,34 @@ socket.on('status', (data) => {
 	} else {
 		console.error('Unknown state');
 	}
+
+	jackStatusElement.innerText = data.data.jack;
+
+	if (data.data.jack == 'running') {
+		jackStatusElement.classList.add('is-success');
+		jackStatusElement.classList.remove('is-danger');
+	} else {
+		jackStatusElement.classList.remove('is-success');
+		jackStatusElement.classList.add('is-danger');
+	}
+
+	jacktripStatusElement.innerText = data.data.jacktrip;
+
+	if (data.data.jacktrip == 'running') {
+		jacktripStatusElement.classList.add('is-success');
+		jacktripStatusElement.classList.remove('is-danger');
+	} else {
+		jacktripStatusElement.classList.remove('is-success');
+		jacktripStatusElement.classList.add('is-danger');
+	}
+});
+
+socket.on('server started', (data) => {
+
+});
+
+socket.on('connected to server', (data) => {
+
 });
 
 socket.emit('status?');
@@ -92,6 +122,9 @@ function startServer() {
 
 function showConnectToServer() {
 	mode = 'client';
+
+	// TODO: Load IP from localstorage
+
 	startupViewElement.style.display = 'none';
 	serverRunningViewElement.style.display = 'none';
 	clientConnectViewElement.style.display = 'block';
@@ -101,6 +134,12 @@ function connectToServer() {
 	connectToServerButton.classList.add('is-loading');
 
 	const disabledElements = disableAllInputs();
+
+	// TODO: Save IP to localstorage
 }
 
-// serverIpInput. 
+function cancelConnectToServer() {
+	startupViewElement.style.display = 'block';
+	serverRunningViewElement.style.display = 'none';
+	clientConnectViewElement.style.display = 'none';
+}

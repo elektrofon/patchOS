@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for i in $@
+do
+	rsync $i patch@patchos.local:/home/patch/patchOS/control-panel/$i
+done
