@@ -17,6 +17,9 @@ echo patch:patch | chpasswd
 # Enter "patch" home folder (for later downloads and easier cleanup)
 cd /home/patch
 
+# Set bashrc variable
+echo "TERM=ansi" >> .bashrc
+
 # Remove "alarm" user
 userdel -r -f alarm
 
@@ -76,6 +79,9 @@ su patch -c "git clone https://github.com/elektrofon/patchOS.git"
 cd jackOS/jack
 su patch -c "makepkg -sA --skipchecksums --noconfirm"
 pacman -U *armv7h.pkg.tar.xz --noconfirm
+
+# Set message of the day
+cat patchOS/etc/motd > /etc/motd
 
 # Install jack service
 cp patchOS/jack/jack@.service /etc/systemd/system/jack@.service
