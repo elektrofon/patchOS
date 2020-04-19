@@ -1,15 +1,17 @@
 const connectToServerButton = document.querySelector('.connect-to-server-button');
-const serverIpInput = document.querySelector('input [name="serverIp"]');
+const serverIpInput = document.querySelector('input[name="serverIp"]');
 const startServerButton = document.querySelector('.start-server-button');
 const startupViewElement = document.querySelector('.startup-view');
 const serverRunningViewElement = document.querySelector('.server-running-view');
 const clientConnectViewElement = document.querySelector('.client-connect-view');
+const clientConnectedViewElement = document.querySelector('.client-connected-view');
 const jackStatusElement = document.querySelector('.jack-status');
 const jacktripStatusElement = document.querySelector('.jacktrip-status');
 
 startupViewElement.style.display = 'none';
 serverRunningViewElement.style.display = 'none';
 clientConnectViewElement.style.display = 'none';
+clientConnectedViewElement.style.display = 'none';
 
 // Mode can be either 'server' or 'client'
 let mode = 'server';
@@ -32,10 +34,12 @@ socket.on('status', (data) => {
 			startupViewElement.style.display = 'none';
 			serverRunningViewElement.style.display = 'block';
 			clientConnectViewElement.style.display = 'none';
+			clientConnectedViewElement.style.display = 'none';
 		} else {
 			startupViewElement.style.display = 'block';
 			serverRunningViewElement.style.display = 'none';
 			clientConnectViewElement.style.display = 'none';
+			clientConnectedViewElement.style.display = 'none';
 		}
 	} else if (mode == 'client') {
 
@@ -45,7 +49,7 @@ socket.on('status', (data) => {
 
 	jackStatusElement.innerText = data.data.jack;
 
-	if (data.data.jack == 'running') {
+	if (data.data.jack == 'active') {
 		jackStatusElement.classList.add('is-success');
 		jackStatusElement.classList.remove('is-danger');
 	} else {
@@ -55,7 +59,7 @@ socket.on('status', (data) => {
 
 	jacktripStatusElement.innerText = data.data.jacktrip;
 
-	if (data.data.jacktrip == 'running') {
+	if (data.data.jacktrip == 'active') {
 		jacktripStatusElement.classList.add('is-success');
 		jacktripStatusElement.classList.remove('is-danger');
 	} else {
@@ -114,6 +118,7 @@ function startServer() {
 		startupViewElement.style.display = 'none';
 		serverRunningViewElement.style.display = 'block';
 		clientConnectViewElement.style.display = 'none';
+		clientConnectedViewElement.style.display = 'none';
 	})
 	.catch((error) => {
 		console.error('Error:', error);
@@ -128,6 +133,7 @@ function showConnectToServer() {
 	startupViewElement.style.display = 'none';
 	serverRunningViewElement.style.display = 'none';
 	clientConnectViewElement.style.display = 'block';
+	clientConnectedViewElement.style.display = 'none';
 }
 
 function connectToServer() {
@@ -136,10 +142,34 @@ function connectToServer() {
 	const disabledElements = disableAllInputs();
 
 	// TODO: Save IP to localstorage
+	
+	fetch('/jacktrip/start-client', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({serverIp: serverIpInput.value})
+	})
+	.then((response) => response.json())
+	.then((data) => {
+		console.log('Success:', data);
+
+		startServerButton.classList.remove('is-loading');
+		enableInputs(disabledElements);
+
+		startupViewElement.style.display = 'none';
+		serverRunningViewElement.style.display = 'none';
+		clientConnectViewElement.style.display = 'none';
+		clientConnectedViewElement.style.display = 'block';
+	})
+	.catch((error) => {
+		console.error('Error:', error);
+	});
 }
 
 function cancelConnectToServer() {
 	startupViewElement.style.display = 'block';
 	serverRunningViewElement.style.display = 'none';
 	clientConnectViewElement.style.display = 'none';
+	clientConnectedViewElement.style.display = 'none';
 }

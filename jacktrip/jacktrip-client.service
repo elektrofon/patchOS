@@ -1,0 +1,15 @@
+[Unit]
+Description=Jacktrip client
+After=jack@jack.service
+Conflicts=jacktrip-server.service
+
+[Service]
+Type=simple
+User=patch
+ExecStart=/bin/jacktrip -c ${JACKTRIP_SERVER_IP} -n 4
+LimitRTPRIO=99
+LimitRTTIME=infinity
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=default.target
