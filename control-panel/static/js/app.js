@@ -13,6 +13,22 @@ serverRunningViewElement.style.display = 'none';
 clientConnectViewElement.style.display = 'none';
 clientConnectedViewElement.style.display = 'none';
 
+const states = [
+	'inactive',
+	'audio-device-disconnected',
+	'client-setup',
+	'server-waiting-for-service',
+	'client-waiting-for-service',
+	'server-active',
+	'client-active',
+	'server-failed',
+	'client-failed'
+];
+
+let state = 'inactive';
+let jackStatus = 'inactive';
+let jacktripStatus = 'inactive';
+
 // Mode can be either 'server' or 'client'
 let mode = 'server';
 
@@ -29,25 +45,72 @@ socket.on('disconnect', () => {
 socket.on('status', (data) => {
 	console.log(data.data.jacktrip);
 
-	if (mode == 'server') {
-		if (data.data.jacktrip == 'running') {
-			startupViewElement.style.display = 'none';
-			serverRunningViewElement.style.display = 'block';
-			clientConnectViewElement.style.display = 'none';
-			clientConnectedViewElement.style.display = 'none';
-		} else {
-			startupViewElement.style.display = 'block';
-			serverRunningViewElement.style.display = 'none';
-			clientConnectViewElement.style.display = 'none';
-			clientConnectedViewElement.style.display = 'none';
-		}
-	} else if (mode == 'client') {
+	// if (mode == 'server') {
+	// 	if (data.data.jacktrip == 'running') {
+	// 		startupViewElement.style.display = 'none';
+	// 		serverRunningViewElement.style.display = 'block';
+	// 		clientConnectViewElement.style.display = 'none';
+	// 		clientConnectedViewElement.style.display = 'none';
+	// 	} else {
+	// 		startupViewElement.style.display = 'block';
+	// 		serverRunningViewElement.style.display = 'none';
+	// 		clientConnectViewElement.style.display = 'none';
+	// 		clientConnectedViewElement.style.display = 'none';
+	// 	}
+	// } else if (mode == 'client') {
 
-	} else {
-		console.error('Unknown state');
+	// } else {
+	// 	console.error('Unknown state');
+	// }
+
+	jackStatus = data.data.jack;
+	jacktripStatus = data.data.jacktrip;
+
+	if (jackStatus == 'running' && jacktripStatus == 'inactive') {
+		state = 'inactive';
 	}
 
-	jackStatusElement.innerText = data.data.jack;
+	if (jackStatus == 'inactive') {
+		state = 'audio-device-disconnected';
+	}
+
+	switch (state) {
+		case 'inactive':
+			break;
+		case 'audio-device-disconnected':
+			break;
+		case 'client-setup':
+		case 'client-setup':
+			break;
+		case 'server-waiting-for-service':
+			break;
+		case 'client-waiting-for-service':
+			startServerButton.classList.remove('is-loading');
+			enableInputs(disabledElements);
+
+			startupViewElement.style.display = 'none';
+			serverRunningViewElement.style.display = 'none';
+			clientConnectViewElement.style.display = 'none';
+
+			if (jacktripStatus == 'running') {
+				state = 'client-active';
+				clientConnectedViewElement.style.display = 'block';
+			} else {
+				state = 'client-failed';
+			}
+
+			break;
+		case 'server-active':
+			break;
+		case 'client-active':
+			break;
+		case 'server-failed':
+			break;
+		case 'client-failed:
+			break;
+	}
+
+	jackStatusElement.innerText = jackStatus;
 
 	if (data.data.jack == 'active') {
 		jackStatusElement.classList.add('is-success');
@@ -57,7 +120,7 @@ socket.on('status', (data) => {
 		jackStatusElement.classList.add('is-danger');
 	}
 
-	jacktripStatusElement.innerText = data.data.jacktrip;
+	jacktripStatusElement.innerText = jacktripStatus;
 
 	if (data.data.jacktrip == 'active') {
 		jacktripStatusElement.classList.add('is-success');
@@ -152,15 +215,7 @@ function connectToServer() {
 	})
 	.then((response) => response.json())
 	.then((data) => {
-		console.log('Success:', data);
-
-		startServerButton.classList.remove('is-loading');
-		enableInputs(disabledElements);
-
-		startupViewElement.style.display = 'none';
-		serverRunningViewElement.style.display = 'none';
-		clientConnectViewElement.style.display = 'none';
-		clientConnectedViewElement.style.display = 'block';
+		state = 'client-waiting-for-service':
 	})
 	.catch((error) => {
 		console.error('Error:', error);
