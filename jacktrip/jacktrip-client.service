@@ -6,7 +6,8 @@ Conflicts=jacktrip-server.service
 [Service]
 Type=simple
 User=patch
-ExecStart=/bin/jacktrip -c ${JACKTRIP_SERVER_IP} -n 4
+EnvironmentFile=-/home/patch/patchOS/control-panel/server-ip
+ExecStart=/bin/jacktrip -c $JACKTRIP_SERVER_IP -n 4
 LimitRTPRIO=99
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity

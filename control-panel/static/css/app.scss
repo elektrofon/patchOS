@@ -45,6 +45,33 @@ $divider-color: $grey-dark;
 	
 @import 'node_modules/bulma-extensions/bulma-divider/src/sass/index.sass';
 
+body.loading {
+	&:before {
+		content: '';
+		position: fixed;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: 0;
+		background-color: $beige-lighter;
+		z-index: 1000;
+	}
+
+	&:after {
+		@include loader;
+		position: absolute;
+		top: calc(50% - 2.5em);
+		left: calc(50% - 2.5em);
+		width: 5em;
+		height: 5em;
+		border-width: 0.25em;
+		z-index: 1001;
+	}
+}
+
+.debug-info {
+	display: none;
+}
 
 .logo {
 	width: 66.666%;
@@ -61,4 +88,25 @@ form:invalid .connect-to-server-button {
 	box-shadow: $button-disabled-shadow;
 	opacity: $button-disabled-opacity;
     pointer-events: none;
+}
+
+div {
+	&.is-loading {
+		position: relative;
+		pointer-events: none;
+		opacity: 0.5;
+		min-width: 5rem;
+		min-height: 5rem;
+		margin-top: 2rem;
+
+		&:after {
+			@include loader;
+			position: absolute;
+			top: calc(50% - 2.5em);
+			left: calc(50% - 2.5em);
+			width: 5em;
+			height: 5em;
+			border-width: 0.25em;
+        }
+    }
 }

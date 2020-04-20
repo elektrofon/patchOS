@@ -24,7 +24,7 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 </head>
-<body>
+<body class="loading">
 	<section class="section">
 		<div class="container">
 			<div class="tile is-ancestor">
@@ -35,7 +35,7 @@
 						</div>
 					</div>
 
-					<div class="tile is-vertical">
+					<div class="tile is-vertical debug-info">
 						<div class="tile is-parent">
 							<div class="tile is-child field is-grouped is-grouped-centered">
 								<div class="control">
@@ -56,6 +56,17 @@
 					</div>
 
 					<div class="tile is-parent">
+						<section class="tile is-child audio-device-disconnected-view">
+							<div class="is-divider"></div>
+							<div class="tile has-text-centered">
+								<p class="title is-3">Please connect your audio device</p>
+							</div>
+
+							<div class="tile has-text-centered">
+								<div class="is-loading"></div>
+							</div>
+						</section>
+
 						<section class="tile is-child startup-view">
 							<div class="is-divider" data-content="LET'S PATCH!"></div>
 							<div class="tile buttons is-centered">
@@ -69,13 +80,13 @@
 						<section class="tile is-child server-running-view">
 							<div class="is-divider" data-content="SERVER IS RUNNING AT"></div>
 							<div class="tile has-text-centered">
-								<p class="title is-3">255.255.255.255</p>
+								<p class="title is-3 external-ip">0.0.0.0</p>
 							</div>
 
 							<div class="is-divider"></div>
 
 							<div class="tile buttons is-centered">
-								<button class="button is-large is-outline is-fullwidth stop-server-button" onclick="stopServer()">Stop server</button>
+								<button class="button is-large is-outline is-fullwidth stop-button" onclick="stop()">Stop server</button>
 							</div>
 						</section>
 
@@ -98,13 +109,26 @@
 						<section class="tile is-child client-connected-view">
 							<div class="is-divider" data-content="CONNECTED-TO"></div>
 							<div class="tile has-text-centered">
-								<p class="title is-3">255.255.255.255</p>
+								<p class="title is-3 server-ip">0.0.0.0</p>
 							</div>
 
 							<div class="is-divider"></div>
 
 							<div class="tile buttons is-centered">
-								<button class="button is-large is-outline is-fullwidth stop-server-button" onclick="stopServer()">Disconnect</button>
+								<button class="button is-large is-outline is-fullwidth stop-button" onclick="stop()">Disconnect</button>
+							</div>
+						</section>
+
+						<section class="tile is-child client-error-view">
+							<div class="is-divider" data-content="ERROR!"></div>
+							<div class="tile has-text-centered">
+								<p class="title is-4 server-ip"></p>
+							</div>
+
+							<div class="is-divider"></div>
+
+							<div class="tile buttons is-centered">
+								<button class="button is-large is-outline is-fullwidth stop-button" onclick="stop()">OK</button>
 							</div>
 						</section>
 					</div>

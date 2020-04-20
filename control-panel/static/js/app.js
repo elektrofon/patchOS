@@ -1,19 +1,35 @@
+const DEBUG = true;
+
+if (DEBUG) {
+	for (element of document.querySelectorAll('.debug-info')) {
+		element.style.display = 'block';
+	}
+}
+
 const connectToServerButton = document.querySelector('.connect-to-server-button');
 const serverIpInput = document.querySelector('input[name="serverIp"]');
 const startServerButton = document.querySelector('.start-server-button');
+const stopButtons = document.querySelectorAll('.stop-button');
 const startupViewElement = document.querySelector('.startup-view');
+const audioDeviceDisconnectedViewElement = document.querySelector('.audio-device-disconnected-view');
 const serverRunningViewElement = document.querySelector('.server-running-view');
 const clientConnectViewElement = document.querySelector('.client-connect-view');
 const clientConnectedViewElement = document.querySelector('.client-connected-view');
+const clientErrorViewElement = document.querySelector('.client-error-view');
 const jackStatusElement = document.querySelector('.jack-status');
 const jacktripStatusElement = document.querySelector('.jacktrip-status');
 
-startupViewElement.style.display = 'none';
-serverRunningViewElement.style.display = 'none';
-clientConnectViewElement.style.display = 'none';
-clientConnectedViewElement.style.display = 'none';
+const views = [
+	startupViewElement,
+	audioDeviceDisconnectedViewElement,
+	serverRunningViewElement,
+	clientConnectViewElement,
+	clientConnectedViewElement,
+	clientErrorViewElement
+];
 
 const states = [
+	'loading',
 	'inactive',
 	'audio-device-disconnected',
 	'client-setup',
@@ -22,209 +38,236 @@ const states = [
 	'server-active',
 	'client-active',
 	'server-failed',
-	'client-failed'
+	'client-failed',
+	'stopping'
 ];
 
 let state = 'inactive';
 let jackStatus = 'inactive';
 let jacktripStatus = 'inactive';
 
-// Mode can be either 'server' or 'client'
-let mode = 'server';
-
 const socket = io(`ws://${location.host}`);
+
+function showView(viewElement) {
+	for (const view of views) {
+		view.style.display = 'none';
+	}
+
+	if (viewElement) {
+		viewElement.style.display = 'block';
+	}
+}
+
+showView(); // Hide all views
 
 socket.on('connect', () => {
 	console.log('WebSocket connected');
+	
+	// Kick things off by querying status
+	socket.emit('status?');
+
 });
 
 socket.on('disconnect', () => {
 	console.log('WebSocket disconnected');
+
+	document.body.classList.add('loading');
 });
 
-socket.on('status', (data) => {
-	console.log(data.data.jacktrip);
+function onStatus(data) {
+	jackStatus = data.jack;
+	jacktripStatus = data.jacktrip;
+	jacktripMode = data.jacktripMode;
 
-	// if (mode == 'server') {
-	// 	if (data.data.jacktrip == 'running') {
-	// 		startupViewElement.style.display = 'none';
-	// 		serverRunningViewElement.style.display = 'block';
-	// 		clientConnectViewElement.style.display = 'none';
-	// 		clientConnectedViewElement.style.display = 'none';
-	// 	} else {
-	// 		startupViewElement.style.display = 'block';
-	// 		serverRunningViewElement.style.display = 'none';
-	// 		clientConnectViewElement.style.display = 'none';
-	// 		clientConnectedViewElement.style.display = 'none';
-	// 	}
-	// } else if (mode == 'client') {
+	// Set status UI elements -->
+	jackStatusElement.innerText = jackStatus;
 
-	// } else {
-	// 	console.error('Unknown state');
-	// }
-
-	jackStatus = data.data.jack;
-	jacktripStatus = data.data.jacktrip;
-
-	if (jackStatus == 'running' && jacktripStatus == 'inactive') {
-		state = 'inactive';
+	if (jackStatus == 'active') {
+		jackStatusElement.classList.add('is-success');
+		jackStatusElement.classList.remove('is-warning');
+		jackStatusElement.classList.remove('is-danger');
+	} else if (jackStatus == 'failed') {
+		jackStatusElement.classList.remove('is-success');
+		jackStatusElement.classList.remove('is-warning');
+		jackStatusElement.classList.add('is-danger');
+	} else {
+		jackStatusElement.classList.remove('is-success');
+		jackStatusElement.classList.add('is-warning');
+		jackStatusElement.classList.remove('is-danger');
 	}
 
+	jacktripStatusElement.innerText = jacktripStatus;
+
+	if (jacktripStatus == 'active') {
+		jacktripStatusElement.classList.add('is-success');
+		jacktripStatusElement.classList.remove('is-warning');
+		jacktripStatusElement.classList.remove('is-danger');
+	} else if (jacktripStatus == 'failed') {
+		jacktripStatusElement.classList.remove('is-success');
+		jacktripStatusElement.classList.remove('is-warning');
+		jacktripStatusElement.classList.add('is-danger');
+	} else {
+		jacktripStatusElement.classList.remove('is-success');
+		jacktripStatusElement.classList.add('is-warning');
+		jacktripStatusElement.classList.remove('is-danger');
+	}
+	// Set status UI elements <--
+
+	// Handle inactive jack service
 	if (jackStatus == 'inactive') {
 		state = 'audio-device-disconnected';
+
+		showView(audioDeviceDisconnectedViewElement);
+
+		return;
+	}
+
+	// Handle stray failed jacktrip service
+	if (state == 'inactive' && jacktripStatus == 'failed') {
+		document.body.classList.add('loading');
+
+		socket.emit('jacktrip-stop');
+
+		return;
+	}
+
+	if (state == 'server-waiting-for-service' && jacktripStatus == 'active') {
+		state = 'server-active';
+	} else if (state == 'server-waiting-for-service' && jacktripStatus == 'failed') {
+		state = 'server-failed';
+	}
+
+	if (state == 'client-waiting-for-service' && jacktripStatus == 'active') {
+		state = 'client-active';
+	} else if (state == 'client-waiting-for-service' && jacktripStatus == 'failed') {
+		state = 'client-failed';
+	}
+
+	if (jacktripStatus == 'active' && jacktripMode == 'server') {
+		state = 'server-active';
+	}
+
+	if (jacktripStatus == 'active' && jacktripMode == 'client') {
+		state = 'client-active';
+	}
+
+	if (state == 'stopping' && jacktripStatus == 'inactive') {
+		state = 'inactive';
 	}
 
 	switch (state) {
 		case 'inactive':
+			enableInputs();
+			showView(startupViewElement);
+
 			break;
 		case 'audio-device-disconnected':
 			break;
-		case 'client-setup':
 		case 'client-setup':
 			break;
 		case 'server-waiting-for-service':
 			break;
 		case 'client-waiting-for-service':
-			startServerButton.classList.remove('is-loading');
-			enableInputs(disabledElements);
-
-			startupViewElement.style.display = 'none';
-			serverRunningViewElement.style.display = 'none';
-			clientConnectViewElement.style.display = 'none';
-
-			if (jacktripStatus == 'running') {
-				state = 'client-active';
-				clientConnectedViewElement.style.display = 'block';
-			} else {
-				state = 'client-failed';
-			}
-
 			break;
 		case 'server-active':
+			enableInputs();
+			showView(serverRunningViewElement);
+
 			break;
 		case 'client-active':
+			enableInputs();
+			showView(clientConnectedViewElement);
+
 			break;
 		case 'server-failed':
+			enableInputs();
 			break;
-		case 'client-failed:
+		case 'client-failed':
+			enableInputs();
+
+			clientErrorViewElement.querySelector('p').innerText = 'Could not connect to server';
+
+			showView(clientErrorViewElement);
+
+			break;
+		case 'stopping':
 			break;
 	}
 
-	jackStatusElement.innerText = jackStatus;
+	document.body.classList.remove('loading');
+}
 
-	if (data.data.jack == 'active') {
-		jackStatusElement.classList.add('is-success');
-		jackStatusElement.classList.remove('is-danger');
-	} else {
-		jackStatusElement.classList.remove('is-success');
-		jackStatusElement.classList.add('is-danger');
-	}
+socket.on('status', onStatus);
 
-	jacktripStatusElement.innerText = jacktripStatus;
-
-	if (data.data.jacktrip == 'active') {
-		jacktripStatusElement.classList.add('is-success');
-		jacktripStatusElement.classList.remove('is-danger');
-	} else {
-		jacktripStatusElement.classList.remove('is-success');
-		jacktripStatusElement.classList.add('is-danger');
-	}
+socket.on('externalIp', (ip) => {
+	document.querySelector('.external-ip').innerText = ip;
 });
 
-socket.on('server started', (data) => {
-
-});
-
-socket.on('connected to server', (data) => {
-
-});
-
-socket.emit('status?');
-
-function disableAllInputs() {
+function disableInputs() {
 	const elements = document.querySelectorAll('.button, .input');
 
 	for (const element of elements) {
 		element.setAttribute('disabled', '');
 	}
-
-	return elements;
 }
 
-function enableInputs(elements) {
+function enableInputs() {
+	const elements = document.querySelectorAll('.button, .input');
+
 	for (const element of elements) {
 		element.removeAttribute('disabled');
+		element.classList.remove('is-loading');
 	}
 }
 
 function startServer() {
-	mode = 'server';
+	state = 'server-waiting-for-service';
+
+	socket.emit('externalIp?');
 
 	startServerButton.classList.add('is-loading');
 	
-	const disabledElements = disableAllInputs();
+	disableInputs();
 
-	fetch('/jacktrip/start', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({foo: 'bar'})
-	})
-	.then((response) => response.json())
-	.then((data) => {
-		console.log('Success:', data);
-
-		startServerButton.classList.remove('is-loading');
-		enableInputs(disabledElements);
-
-		startupViewElement.style.display = 'none';
-		serverRunningViewElement.style.display = 'block';
-		clientConnectViewElement.style.display = 'none';
-		clientConnectedViewElement.style.display = 'none';
-	})
-	.catch((error) => {
-		console.error('Error:', error);
-	});
+	socket.emit('jacktrip-start-server');
 }
 
 function showConnectToServer() {
-	mode = 'client';
+	state = 'client-setup';
 
 	// TODO: Load IP from localstorage
 
-	startupViewElement.style.display = 'none';
-	serverRunningViewElement.style.display = 'none';
-	clientConnectViewElement.style.display = 'block';
-	clientConnectedViewElement.style.display = 'none';
+	showView(clientConnectViewElement);
 }
 
 function connectToServer() {
+	state = 'client-waiting-for-service';
+
 	connectToServerButton.classList.add('is-loading');
 
-	const disabledElements = disableAllInputs();
+	disableInputs();
+
+	document.querySelector('.server-ip').innerText = serverIpInput.value;
 
 	// TODO: Save IP to localstorage
 	
-	fetch('/jacktrip/start-client', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({serverIp: serverIpInput.value})
-	})
-	.then((response) => response.json())
-	.then((data) => {
-		state = 'client-waiting-for-service':
-	})
-	.catch((error) => {
-		console.error('Error:', error);
-	});
+	socket.emit('jacktrip-start-client', serverIpInput.value);
 }
 
 function cancelConnectToServer() {
-	startupViewElement.style.display = 'block';
-	serverRunningViewElement.style.display = 'none';
-	clientConnectViewElement.style.display = 'none';
-	clientConnectedViewElement.style.display = 'none';
+	state = 'inactive';
+
+	showView(startupViewElement);
+}
+
+function stop() {
+	state = 'stopping';
+
+	for (const button of stopButtons) {
+		button.classList.add('is-loading');
+	}
+
+	disableInputs();
+
+	socket.emit('jacktrip-stop');
 }
