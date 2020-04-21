@@ -6,13 +6,17 @@ After=sound.target local-fs.target
 [Service]
 Type=notify
 User=patch
-Restart=on-failure
-RestartSec=5
+
+# FIXME: Restart on failure causes endless activating loop on initial boot when USB is not connected
+# Restart=on-failure
+# RestartSec=5
+
 EnvironmentFile=-/home/patch/.config/jack/%i.conf
 ExecStart=/bin/jackd $JACK_OPTIONS -d $DRIVER -d $DEVICE $DRIVER_SETTINGS
 LimitRTPRIO=95
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity
+
 # Caution: use on memory-limited devices only
 # OOMScoreAdjust=-1000
 
