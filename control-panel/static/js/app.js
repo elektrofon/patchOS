@@ -119,6 +119,8 @@ function onStatus(data) {
 
 		showView(audioDeviceDisconnectedViewElement);
 
+		document.body.classList.remove('loading');
+
 		return;
 	}
 
