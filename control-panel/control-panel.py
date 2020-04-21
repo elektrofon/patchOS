@@ -52,6 +52,7 @@ jacktripClientServiceInterface = dbus.Interface(
     dbus_interface = 'org.freedesktop.DBus.Properties'
 )
 
+clientCount = 0
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -120,10 +121,27 @@ def jacktripStop():
 @socketio.on('connect')
 def onConnect():
     global thread
+    global clientCount
+    global thread_stop_event
+
+    thread_stop_event.clear()
+
+    clientCount += 1
 
     if not thread.isAlive():
         thread = socketio.start_background_task(checkStatusLoop)
 
+
+@socketio.on('disconnect')
+def onDisConnect():
+    global thread
+    global clientCount
+    global thread_stop_event
+
+    clientCount -= 1
+
+    if clientCount <= 0:
+        thread_stop_event.set()
 
 @socketio.on('status?')
 def queryStatus():
