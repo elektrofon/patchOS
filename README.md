@@ -21,7 +21,17 @@ patchOS is an operating system for the Raspberry PI 4 that makes two modular syn
 
 patchOS is controlled via a simple web interface.  
 It's best to use your phone for this.  
-Open your web bowser and navigate to `http://patchos.local`.
+Open your web bowser and navigate to `http://patchos.local`
+
+### Special note for Android user
+
+Android doesen't support mDNS in the browser.
+You will therefore not be able to connect to `http://patchos.local`.
+
+Thankfully there is an easy fix by installing a network discovery app.  
+A good suggestion is [BonjourBrowser](https://play.google.com/store/apps/details?id=de.wellenvogel.bonjourbrowser)
+
+Install the app and it will find `patchOS control panel` for you.
 
 ## Notes
 
