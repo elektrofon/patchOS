@@ -83,6 +83,11 @@ pacman -U *armv7h.pkg.tar.xz --noconfirm
 # Set message of the day
 cat patchOS/etc/motd > /etc/motd
 
+# Install control-panel service
+cp patchOS/control-panel/control-panel.service /etc/systemd/system/control-panel.service
+chmod 644 /etc/systemd/system/control-panel.service
+systemctl enable control-panel.service
+
 # Install jack service
 cp patchOS/jack/jack@.service /etc/systemd/system/jack@.service
 chmod 644 /etc/systemd/system/jack@.service

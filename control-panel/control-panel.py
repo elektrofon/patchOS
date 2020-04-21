@@ -52,13 +52,14 @@ jacktripClientServiceInterface = dbus.Interface(
     dbus_interface = 'org.freedesktop.DBus.Properties'
 )
 
+debug = False
 clientCount = 0
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-app.config['DEBUG'] = True
+app.config['DEBUG'] = debug
 
-socketio = SocketIO(app, async_mode=None, logger=True, engineio_logger=True)
+socketio = SocketIO(app, async_mode=None, logger=debug, engineio_logger=debug)
 
 thread = Thread()
 thread_stop_event = Event()
