@@ -20,7 +20,7 @@ optdepends=('a2jmidid: Expose ALSA MIDI in lJACK MIDI'
             'realtime-privileges: Acquire realtime privileges')
 provides=('jack' 'libjack.so' 'libjacknet.so' 'libjackserver.so')
 conflicts=('jack')
-replaces=('jack2-dbus')
+replaces=('jack' 'jack2' 'jack2-dbus')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/jackaudio/${pkgname}/archive/v${pkgver}.tar.gz")
 sha512sums=('ca9738fd5aadcb7e125f98a358437905959afebe0b792cab316fc31410e89ea3aefdb85154792a9d0a80f988aa7eff379ff5c7ac6c4bfa1d57ad3d7de7b5fdd')
 

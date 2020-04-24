@@ -24,7 +24,7 @@ manager = dbus.Interface(
 
 jackService = bus.get_object(
     'org.freedesktop.systemd1',
-    object_path = manager.GetUnit('jack@jack.service')
+    object_path = manager.GetUnit('jack.service')
 )
 
 jacktripServerService = bus.get_object(

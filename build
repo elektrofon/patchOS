@@ -1,27 +1,8 @@
-#!/bin/sh
+#!/bin/bash -e
 
-if [[ $(uname) == 'Linux' ]]; then
-	if [[ -z $(lscpu | grep 'Cortex-A72') ]]; then
-		echo "This script must be run on a Raspberry PI 4"
-		exit 1
-	fi
-elif [[ $(uname) == 'Darwin' ]]; then
-	echo "This script must be run on a Raspberry PI 4"
-	exit 1
-fi
-
-# Create "patch" user
-useradd -m -G audio,realtime patch
-echo patch:patch | chpasswd
-
-# Enter "patch" home folder (for later downloads and easier cleanup)
-cd /home/patch
-
-# Set bashrc variable
-echo "TERM=ansi" >> .bashrc
-
-# Remove "alarm" user
-userdel -r -f alarm
+# Set temporary nameserver
+mv /etc/resolv.conf /etc/resolv.conf.tmp
+echo 'nameserver 8.8.8.8' > /etc/resolv.conf
 
 # Set hostname
 echo "patchos" > /etc/hostname
@@ -40,12 +21,12 @@ pacman -S --noconfirm \
 	git \
 	realtime-privileges \
 	libffado \
-	rtaudio \
 	qt5-base \
+	rtaudio \
+	portaudio \
 	celt \
 	opus \
 	libsamplerate \
-	portaudio \
 	waf \
 	avahi \
 	nss-mdns \
@@ -54,63 +35,107 @@ pacman -S --noconfirm \
 	python-flask-socketio \
 	python-eventlet
 
-# Build jack2 from source without d-bus (Taken from jack2-git AUR PKGBUILD)
-git clone https://github.com/jackaudio/jack2.git
-cd jack2
-touch __init__.py
-mkdir -vp tools
-cp -v waflib/extras/xcode*.py tools
-mv -v autooptions/__init__.py tools/autooptions.py
-rm -rv waflib
-sed -e "s/load('xcode'/load('xcode', tooldir='tools'/g" \
-	-e "s/load('xcode6'/load('xcode6', tooldir='tools'/g" \
-	-e "s/load('autooptions'/load('autooptions', tooldir='tools'/g" \
-	-i wscript
+# Enable all cores for building
+echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
 
-# Build jacktrip from source
-git clone https://github.com/jacktrip/jacktrip.git
-cd jacktrip/src
-./build
-make install
+# Rename default user
+sed -i "s/alarm/patch/g" /etc/passwd /etc/group /etc/shadow
+mv /home/alarm "/home/patch"
+echo patch:patch | chpasswd
+usermod -a -G audio,realtime patch
+
+# Create "patch" user
+# useradd -m -G audio,realtime patch
+# echo patch:patch | chpasswd
+
+# Move /patchOS to /home/patch/patchOS, and set owner to 'patch'
+mv /patchOS /home/patch/patchOS
+chown -R patch:patch /home/patch/patchOS
+
+# Enter "patch" home folder (for later downloads and easier cleanup)
 cd /home/patch
 
-# Get patchOS repository
-su patch -c "git clone https://github.com/elektrofon/patchOS.git"
-cd jackOS/jack
+# Set bashrc variable
+echo "TERM=ansi" >> .bashrc
+
+# Remove "alarm" user
+# userdel -r -f alarm
+
+# Build jack2 from source without d-bus (Taken from jack2-git AUR PKGBUILD)
+# git clone https://github.com/jackaudio/jack2.git
+# cd jack2
+# touch __init__.py
+# mkdir -vp tools
+# cp -v waflib/extras/xcode*.py tools
+# mv -v autooptions/__init__.py tools/autooptions.py
+# rm -rv waflib
+# sed -e "s/load('xcode'/load('xcode', tooldir='tools'/g" \
+# 	-e "s/load('xcode6'/load('xcode6', tooldir='tools'/g" \
+# 	-e "s/load('autooptions'/load('autooptions', tooldir='tools'/g" \
+# 	-i wscript
+
+# Build jack from source
+cd /home/patch/patchOS/packages/jack
+su patch -c "makepkg -sA --skipchecksums --noconfirm"
+
+# Remove conflicting packages before installing jack
+pacman -R --noconfirm \
+	rtaudio \
+	portaudio \
+	jack
+
+# Install jack
+pacman -U *armv7h.pkg.tar.xz --noconfirm
+
+# Reinstall packages that depends on jack
+pacman -S --noconfirm \
+	rtaudio \
+	portaudio
+
+# Install symlinks to fix QT5 library paths in chroot
+# cd /home/patch
+# su patch -c "curl -L https://aur.archlinux.org/cgit/aur.git/snapshot/symlinks.tar.gz | tar xz"
+# cd symlinks
+# su patch -c "makepkg -sA --skipchecksums --noconfirm"
+
+# Build jacktrip from source
+cd /home/patch/patchOS/packages/jack
 su patch -c "makepkg -sA --skipchecksums --noconfirm"
 pacman -U *armv7h.pkg.tar.xz --noconfirm
 
 # Set message of the day
-cat patchOS/etc/motd > /etc/motd
+cat /home/patch/patchOS/etc/motd > /etc/motd
 
 # Install control-panel service
-cp patchOS/control-panel/control-panel.service /etc/systemd/system/control-panel.service
+cp /home/patch/patchOS/services/control-panel.service /etc/systemd/system/control-panel.service
 chmod 644 /etc/systemd/system/control-panel.service
 systemctl enable control-panel.service
 
 # Install jack service
-cp patchOS/jack/jack@.service /etc/systemd/system/jack@.service
-chmod 644 /etc/systemd/system/jack@.service
+cp /home/patch/patchOS/services/jack.service /etc/systemd/system/jack.service
+chmod 644 /etc/systemd/system/jack.service
 mkdir -p .config/jack
-cp patchOS/jack/jack.conf .config/jack/jack.conf
-systemctl enable jack@jack.service
+cp /home/patch/patchOS/packages/jack/jack.conf .config/jack/jack.conf
+systemctl enable jack.service
 
 # Configure jack service to start/stop on ES-8 connect/disconnect
-cp patchOS/es8/es8.rules /etc/udev/rules.d/es8.rules
+cp /home/patch/patchOS/es8/es8.rules /etc/udev/rules.d/es8.rules
 
 # Install jacktrip services (server and client)
-cp patchOS/jacktrip/jacktrip-server.service /etc/systemd/system/jacktrip-server.service
-cp patchOS/jacktrip/jacktrip-client.service /etc/systemd/system/jacktrip-client.service
+cp /home/patch/patchOS/services/jacktrip-server.service /etc/systemd/system/jacktrip-server.service
+cp /home/patch/patchOS/services/jacktrip-client.service /etc/systemd/system/jacktrip-client.service
 chmod 644 /etc/systemd/system/jacktrip-server.service
 chmod 644 /etc/systemd/system/jacktrip-client.service
 systemctl enable jacktrip-server.service
 systemctl enable jacktrip-client.service
 
 # Enable and start mDNS service
-cp patchOS/control-panel/http.service /etc/avahi/services/http.service
+cp /home/patch/patchOS/services/http.service /etc/avahi/services/http.service
 systemctl enable avahi-daemon
 systemctl start avahi-daemon
 
 # Cleanup
-rm -Rf jack2 jacktrip jackOS
+mv /etc/resolv.conf.tmp /etc/resolv.conf
+rm -Rf /home/patch/patchOS/packages
 pacman -Rsu git base-devel --noconfirm
+pacman -Scc

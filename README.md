@@ -33,6 +33,12 @@ A good suggestion is [BonjourBrowser](https://play.google.com/store/apps/details
 
 Install the app and it will find `patchOS control panel` for you.
 
+### If you are behind a NAT or a firewall
+
+patchOS uses `UDP` port `4464` to stream audio.  
+If you are behind a NAT router or a firewall you need to forward `UDP` port `4464` to the IP of `http://patchos.local`.  
+This is done by logging into your internet modem/router and finding the NAT or firewall settings.
+
 ## Notes
 
 patchOS is an experiment; not a product.  

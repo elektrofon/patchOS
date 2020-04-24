@@ -1,5 +1,5 @@
 [Unit]
-Description=JACK server using %i.conf profile
+Description=JACK server
 Documentation=man:jackd(1)
 After=sound.target local-fs.target
 
@@ -11,7 +11,7 @@ User=patch
 # Restart=on-failure
 # RestartSec=5
 
-EnvironmentFile=-/home/patch/.config/jack/%i.conf
+EnvironmentFile=-/home/patch/.config/jack/jack.conf
 ExecStart=/bin/jackd $JACK_OPTIONS -d $DRIVER -d $DEVICE $DRIVER_SETTINGS
 LimitRTPRIO=95
 LimitRTTIME=infinity

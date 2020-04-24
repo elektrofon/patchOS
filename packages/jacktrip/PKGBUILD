@@ -1,0 +1,29 @@
+pkgname=jacktrip
+pkgver=1.2.0
+_commit=5dd7740
+pkgrel=1
+pkgdesc='JackTrip is a Linux, Mac OSX, or Windows multi-machine audio system used for network music performance over the Internet.'
+arch=('i686' 'x86_64' 'armv7h')
+license=('MIT' 'custom')
+depends=('jack' 'qt5-base' 'rtaudio')
+conflicts=("$pkgname-git")
+url="https://github.com/jacktrip/jacktrip"
+source=("https://github.com/jacktrip/jacktrip/tarball/$_commit")
+sha256sums=('SKIP')
+
+prepare() {
+	mv $srcdir/jacktrip-jacktrip* $srcdir/$pkgname
+	cp ../Makefile* $srcdir/$pkgname/src
+	cp ../.qmake.stash $srcdir/$pkgname/src
+	mkdir -p $srcdir/$pkgname/src/release
+}
+
+build() {
+	cd "$pkgname/src"
+	make -f Makefile.Release
+}
+
+package() {
+	cd "$srcdir/$pkgname/src"
+	install -Dm0755 jacktrip "$pkgdir/usr/bin/jacktrip"
+}

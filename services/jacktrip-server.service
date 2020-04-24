@@ -1,6 +1,6 @@
 [Unit]
 Description=Jacktrip server
-After=jack@jack.service
+After=jack.service
 Conflicts=jacktrip-client.service
 
 [Service]
