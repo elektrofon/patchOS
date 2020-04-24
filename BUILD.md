@@ -8,10 +8,11 @@ Head to [vagrantup.com](https://www.vagrantup.com/downloads.html) and download V
 
 In your `patchOS` source directory:
 ```sh
-$ vagrant up
+$ vagrant up && vagrant halt && vagrant up
 ```
 
-First time setup will take about 1 hour on a decent laptop.
+First time setup will take about 1 hour on a decent laptop.  
+The reason for halting and upping is to load any new kernel updates that was installed when upgrading Arch Linux.
 
 ### 3. Build patchOS
 
