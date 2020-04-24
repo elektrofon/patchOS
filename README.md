@@ -19,11 +19,15 @@ patchOS is an operating system for the Raspberry PI 4 that makes two modular syn
 
 ## How to use
 
-patchOS is controlled via a simple web interface.  
-It's best to use your phone for this.  
-Open your web browser and navigate to `http://patchos.local`
+Connect your ES-8 to one of the USB ports of the Raspberry PI 4.  
+On your phone open your web browser and navigate to `http://patchos.local`.  
 
-Input 1-4 on the ES-8 are be sent to the peer, and output 1-4 receives signals from the peer.
+You will be met with a simple control panel:
+
+<img src="./assets/diagram.svg" width="300"/>
+
+Input 1-4 on the ES-8 are sent to the peer,  
+and output 1-4 receives signals from the peer.
 
 ### Special note for Android user
 
