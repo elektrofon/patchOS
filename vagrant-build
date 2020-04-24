@@ -57,7 +57,7 @@ echo "[ FINISHED ] Enabling ARM execution on x86_64"
 # Copy patchOS to Arch Linux ARM
 echo "[ STARTED  ] Copying patchOS to Arch Linux ARM"
 sudo cp /vagrant/build /mnt/usr/bin
-sudo rsync -a --exclude='.*' /vagrant/ /mnt/patchOS
+sudo rsync -a --exclude='.git' /vagrant/ /mnt/patchOS
 echo "[ FINISHED ] Copying patchOS to Arch Linux ARM"
 
 # Chroot into Arch Linux ARM
