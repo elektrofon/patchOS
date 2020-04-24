@@ -88,8 +88,8 @@ systemctl enable control-panel.service
 # Install jack service
 cp /home/patch/patchOS/services/jack.service /etc/systemd/system/jack.service
 chmod 644 /etc/systemd/system/jack.service
-mkdir -p .config/jack
-cp /home/patch/patchOS/packages/jack/jack.conf .config/jack/jack.conf
+mkdir -p /home/patch/.config/jack
+cp /home/patch/patchOS/packages/jack/jack.conf /home/patch/.config/jack/jack.conf
 systemctl enable jack.service
 
 # Configure jack service to start/stop on ES-8 connect/disconnect

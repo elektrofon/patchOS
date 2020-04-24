@@ -11,7 +11,7 @@ In your `patchOS` source directory:
 $ vagrant up && vagrant halt && vagrant up
 ```
 
-First time setup will take about 1 hour on a decent laptop.  
+First time setup will take about 1 hour on a half decent laptop.  
 The reason for halting and upping is to load any new kernel updates that was installed when upgrading Arch Linux.
 
 ### 3. Build patchOS
@@ -20,6 +20,6 @@ The reason for halting and upping is to load any new kernel updates that was ins
 $ vagrant ssh -c "sudo /vagrant/vagrant-build"
 ```
 
-This will take about 2 hours on a decent laptop.
+This will take about 40 minutes on a half decent laptop.
 
 The final `patchOS` image will be in the `release` directory if everything went smoothly.
