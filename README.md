@@ -21,7 +21,7 @@ patchOS is an operating system for the Raspberry PI 4 that makes two modular syn
 
 patchOS is controlled via a simple web interface.  
 It's best to use your phone for this.  
-Open your web bowser and navigate to `http://patchos.local`
+Open your web browser and navigate to `http://patchos.local`
 
 ### Special note for Android user
 
