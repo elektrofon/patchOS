@@ -106,10 +106,9 @@ systemctl enable jacktrip-client.service
 # Enable and start mDNS service
 cp /home/patch/patchOS/services/http.service /etc/avahi/services/http.service
 systemctl enable avahi-daemon
-systemctl start avahi-daemon
 
 # Cleanup
 mv /etc/resolv.conf.tmp /etc/resolv.conf
 rm -Rf /home/patch/patchOS/packages
 pacman -Rsu git base-devel --noconfirm
-pacman -Scc
+yes | pacman -Scc

@@ -22,5 +22,8 @@ Vagrant.configure("2") do |config|
     su vagrant -c "gpg --recv-key 9766E084FB0F43D8"
     su vagrant -c "yay -S binfmt-qemu-static-all-arch qemu-user-static --noconfirm"
     sudo systemctl restart systemd-binfmt.service
+    wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh
+    chmod +x pishrink.sh
+    sudo mv pishrink.sh /usr/local/bin
   SHELL
 end

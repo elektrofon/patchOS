@@ -9,7 +9,7 @@
 ehthumbs.db
 Thumbs.db
 
-# TAGS #
+# Tags #
 ########
 
 TAGS
@@ -33,12 +33,17 @@ cscope.po.out
 
 *.log
 
-# NODE #
+# Node #
 ########
 
 node_modules
 
-# VAGRANT #
+# Vagrant #
 ###########
 
 .vagrant/
+
+# Build #
+#########
+
+release/

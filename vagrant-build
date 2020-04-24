@@ -72,3 +72,11 @@ sudo umount /mnt/boot
 sudo umount /mnt
 sudo losetup --detach "${DRIVE}"
 echo "[ FINISHED ] Cleaning up"
+
+# Shrink image
+cd /home/vagrant/tmp
+sudo pishrink.sh patchOS-rpi4.img
+
+# Copy image to build directory
+mkdir -p /vagrant/release
+cp patchOS-rpi4.img /vagrant/release

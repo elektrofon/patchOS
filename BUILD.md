@@ -22,4 +22,4 @@ $ vagrant ssh -c "sudo /vagrant/vagrant-build"
 
 This will take about 2 hours on a decent laptop.
 
-The final `patchOS` image will be in the `build` directory if everything went smoothly.
+The final `patchOS` image will be in the `release` directory if everything went smoothly.
