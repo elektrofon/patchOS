@@ -18,9 +18,9 @@ Vagrant.configure("2") do |config|
     su vagrant -c "git clone https://aur.archlinux.org/yay-git.git"
     cd yay-git
     su vagrant -c "makepkg -si --skipchecksums --noconfirm"
-    yay -Syu --noconfirm
-    gpg --recv-key 9766E084FB0F43D8
-    yay -S binfmt-qemu-static-all-arch qemu-user-static --noconfirm
-    systemctl restart systemd-binfmt.service
+    su vagrant -c "yay -Syu --noconfirm"
+    su vagrant -c "gpg --recv-key 9766E084FB0F43D8"
+    su vagrant -c "yay -S binfmt-qemu-static-all-arch qemu-user-static --noconfirm"
+    sudo systemctl restart systemd-binfmt.service
   SHELL
 end

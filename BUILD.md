@@ -1,26 +1,24 @@
 ## Building patchOS
 
-### 1. Prepare ArchLinuxARM SD card
+### 1. Install Vagrant
 
-`TODO: Write detailed steps`
+Head to [vagrantup.com](https://www.vagrantup.com/downloads.html) and download Vagrant.
 
+### 2. Set up the patchOS build environment
+
+In your `patchOS` source directory:
 ```sh
-$ pacman -Syu --noconfirm
+$ vagrant up
 ```
 
-### 2. Set up patchOS (as root)
+First time setup will take about 1 hour on a decent laptop.
+
+### 3. Build patchOS
 
 ```sh
-$ cd /root
+$ vagrant ssh -c "sudo /vagrant/vagrant-build"
 ```
 
-```sh
-cd /root && \
-git clone https://github.com/elektrofon/patchOS.git && \
-cd patchOS && \
-./build
-```
+This will take about 2 hours on a decent laptop.
 
-## Creating a release
-
-`TODO: Write detailed steps`
+The final `patchOS` image will be in the `build` directory if everything went smoothly.
