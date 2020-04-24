@@ -73,7 +73,7 @@ pacman -S --noconfirm \
 	portaudio
 
 # Build jacktrip from source
-cd /home/patch/patchOS/packages/jack
+cd /home/patch/patchOS/packages/jacktrip
 su patch -c "makepkg -sA --skipchecksums --noconfirm"
 pacman -U *armv7h.pkg.tar.xz --noconfirm
 
