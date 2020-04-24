@@ -49,19 +49,6 @@ echo "[ STARTED  ] Extracting Arch Linux ARM"
 sudo tar -xpf "${ARCH_LINUX_TARBALL}" -C /mnt
 echo "[ FINISHED ] Extracting Arch Linux ARM"
 
-# Mount system directories
-# echo "[ STARTED  ] Mounting system directories"
-# sudo mount -t proc none /mnt/proc
-# sudo mount -t sysfs none /mnt/sys
-# sudo mount -o bind /dev /mnt/dev
-# echo "[ FINISHED ] Mounting system directories"
-
-# Set up networking
-echo "[ STARTED  ] Setting up networking"
-# sudo mv /mnt/etc/resolv.conf /mnt/etc/resolv.conf.bak
-# sudo cp /etc/resolv.conf /mnt/etc/resolv.conf
-echo "[ FINISHED ] Setting up networking"
-
 # Enable ARM execution on x86_64
 echo "[ STARTED  ] Enabling ARM execution on x86_64"
 sudo cp /usr/bin/qemu-arm-static /mnt/usr/bin/
@@ -81,9 +68,6 @@ echo "[ FINISHED ] Setting up patchOS"
 
 # Cleanup
 echo "[ STARTED  ] Cleaning up"
-# sudo umount /mnt/dev
-# sudo umount /mnt/proc
-# sudo umount /mnt/sys
 sudo umount /mnt/boot
 sudo umount /mnt
 sudo losetup --detach "${DRIVE}"
