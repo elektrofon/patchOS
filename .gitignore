@@ -37,3 +37,8 @@ cscope.po.out
 ########
 
 node_modules
+
+# VAGRANT #
+###########
+
+.vagrant/
