@@ -23,12 +23,14 @@ patchOS is controlled via a simple web interface.
 It's best to use your phone for this.  
 Open your web browser and navigate to `http://patchos.local`
 
+Input 1-4 on the ES-8 are be sent to the peer, and output 1-4 receives signals from the peer.
+
 ### Special note for Android user
 
 Android doesen't support mDNS in the browser.
 You will therefore not be able to connect to `http://patchos.local`.
 
-Thankfully there is an easy fix by installing a network discovery app.  
+Thankfully there's an easy fix by installing a network discovery app.  
 A good suggestion is [BonjourBrowser](https://play.google.com/store/apps/details?id=de.wellenvogel.bonjourbrowser)
 
 Install the app and it will find `patchOS control panel` for you.
@@ -36,7 +38,7 @@ Install the app and it will find `patchOS control panel` for you.
 ### If you are behind a NAT or a firewall
 
 patchOS uses `UDP` port `4464` to stream audio.  
-If you are behind a NAT router or a firewall you need to forward `UDP` port `4464` to the IP of `http://patchos.local`.  
+If you're behind a NAT router or a firewall you need to forward `UDP` port `4464` to the IP of `http://patchos.local`.  
 This is done by logging into your internet modem/router and finding the NAT or firewall settings.
 
 ## Notes
