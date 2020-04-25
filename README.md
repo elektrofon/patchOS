@@ -8,7 +8,7 @@ patchOS is an operating system for the Raspberry PI 4 that makes two modular syn
 ## Requirements
 
 - Raspberry PI 4
-- 8GB+ SD card
+- 4GB+ SD card
 - [Expert Sleepers ES-8 module](https://www.expert-sleepers.co.uk/es8.html)
 
 ## How to install
