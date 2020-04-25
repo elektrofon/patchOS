@@ -29,7 +29,7 @@ You will be met with a simple control panel:
 Input 1-4 on the ES-8 are sent to the peer,  
 and output 1-4 receives signals from the peer.
 
-### Special note for Android user
+### Special note for Android users
 
 Android doesen't support mDNS in the browser.
 You will therefore not be able to connect to `http://patchos.local`.
