@@ -13,7 +13,7 @@ patchOS is an operating system for the Raspberry PI 4 that makes two modular syn
 
 ## How to install
 
-1. Grab the [latest release](/elektrofon/patchOS/releases/latest/download/patchOS-rpi4.img.tar.gz) of patchOS
+1. Grab the [latest release](https://github.com/elektrofon/patchOS/releases/latest/download/patchOS-rpi4.img.tar.gz) of patchOS
 2. Use [etcher](https://www.balena.io/etcher/) to burn patchOS to the SD card
 3. Boot your Raspberry PI with the new patchOS SD card
 
