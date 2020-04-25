@@ -24,7 +24,9 @@ On your phone open your web browser and navigate to `http://patchos.local`.
 
 You will be met with a simple control panel:
 
-<img src="./assets/screenshot.svg" width="300"/>
+<p align="center">
+  <img src="./assets/screenshot.svg" width="300"/>
+</p>
 
 Input 1-4 on the ES-8 are sent to the peer,  
 and output 1-4 receives signals from the peer.
