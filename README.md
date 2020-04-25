@@ -19,6 +19,7 @@ patchOS is an operating system for the Raspberry PI 4 that makes two modular syn
 
 ## How to use
 
+Connect an ethernet cable to the Raspberry PI 4 network port.  
 Connect your ES-8 to one of the USB ports of the Raspberry PI 4.  
 On your phone open your web browser and navigate to `http://patchos.local`.  
 
