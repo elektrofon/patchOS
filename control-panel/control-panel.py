@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 from time import sleep
 from threading import Thread, Event
@@ -91,7 +92,17 @@ def checkStatusLoop():
 
 @app.route("/")
 def index():
-    templateData = {}
+    externalIp = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+    lastConnectedIp = '0.0.0.0'
+
+    if os.path.isfile(os.path.join(sys.path[0], 'server-ip')):
+        with open(os.path.join(sys.path[0], 'server-ip'), 'r') as f:
+            lastConnectedIp = f.read().replace('JACKTRIP_SERVER_IP=', '')
+
+    templateData = {
+        'lastConnectedIp': lastConnectedIp,
+        'externalIp': externalIp
+    }
 
     return render_template('index.html', **templateData)
 
@@ -103,10 +114,8 @@ def jacktripStart():
 
 @socketio.on('jacktrip-start-client')
 def jacktripStartClient(serverIp):
-    serverIpFile = open('server-ip', 'w')
-    serverIpFile.write('JACKTRIP_SERVER_IP=' + serverIp)
-    serverIpFile.close()
-    # os.environ['JACKTRIP_SERVER_IP'] = serverIp;
+    with open(os.path.join(sys.path[0], 'server-ip'), 'w') as f:
+        f.write('JACKTRIP_SERVER_IP=' + serverIp)
 
     manager.StartUnit('jacktrip-client.service', 'replace')
 
@@ -129,7 +138,7 @@ def onConnect():
 
     clientCount += 1
 
-    if not thread.isAlive():
+    if not thread.is_alive():
         thread = socketio.start_background_task(checkStatusLoop)
 
 

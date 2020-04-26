@@ -27,7 +27,7 @@ The final `patchOS` image will be in the `release` directory if everything went 
 ### Compress image before creating a release
 
 ```sh
-$ tar -cf patchOS-rpi4.img | pigz > patchOS-rpi.img.tar.gz
+$ tar cf - patchOS-rpi4.img | pigz > patchOS-rpi.img.tar.gz
 ```
 
 ### Default users in patchOS

@@ -65,7 +65,6 @@ socket.on('connect', () => {
 	
 	// Kick things off by querying status
 	socket.emit('status?');
-
 });
 
 socket.on('disconnect', () => {

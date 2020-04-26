@@ -80,7 +80,7 @@
 						<section class="tile is-child server-running-view">
 							<div class="is-divider" data-content="SERVER IS RUNNING AT"></div>
 							<div class="tile has-text-centered">
-								<p class="title is-3 external-ip">0.0.0.0</p>
+								<p class="title is-3 external-ip">{{ externalIp }}</p>
 							</div>
 
 							<div class="is-divider"></div>
@@ -109,7 +109,7 @@
 						<section class="tile is-child client-connected-view">
 							<div class="is-divider" data-content="CONNECTED-TO"></div>
 							<div class="tile has-text-centered">
-								<p class="title is-3 server-ip">0.0.0.0</p>
+								<p class="title is-3 server-ip">{{ lastConnectedIp }}</p>
 							</div>
 
 							<div class="is-divider"></div>
