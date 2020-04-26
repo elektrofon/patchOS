@@ -1,0 +1,7 @@
+#!/bin/sh -xe
+
+# Shrink image
+echo "[ STARTED  ] Shrinking image"
+cd /home/vagrant/tmp
+sudo pishrink.sh patchOS-rpi4.img
+echo "[ FINISHED ] Shrinking image"

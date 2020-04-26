@@ -57,7 +57,7 @@ echo "[ FINISHED ] Enabling ARM execution on x86_64"
 # Copy patchOS to Arch Linux ARM
 echo "[ STARTED  ] Copying patchOS to Arch Linux ARM"
 sudo cp /vagrant/build /mnt/usr/bin
-sudo rsync -a --exclude='.git' /vagrant/ /mnt/patchOS
+sudo rsync -a --exclude='.git' --exclude='release' /vagrant/ /mnt/patchOS
 echo "[ FINISHED ] Copying patchOS to Arch Linux ARM"
 
 # Chroot into Arch Linux ARM
@@ -74,9 +74,13 @@ sudo losetup --detach "${DRIVE}"
 echo "[ FINISHED ] Cleaning up"
 
 # Shrink image
+echo "[ STARTED  ] Shrinking image"
 cd /home/vagrant/tmp
-sudo pishrink.sh patchOS-rpi4.img
+sudo pishrink.sh -s patchOS-rpi4.img
+echo "[ FINISHED ] Shrinking image"
 
 # Copy image to build directory
+echo "[ STARTED  ] Copying image to release directory"
 mkdir -p /vagrant/release
-cp patchOS-rpi4.img /vagrant/release
+cp patchOS-rpi4.* /vagrant/release
+echo "[ FINISHED ] Copying image to release directory"

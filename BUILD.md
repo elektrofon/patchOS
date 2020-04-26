@@ -23,3 +23,15 @@ $ vagrant ssh -c "sudo /vagrant/vagrant-build"
 This will take about 40 minutes on a half decent laptop.
 
 The final `patchOS` image will be in the `release` directory if everything went smoothly.
+
+### Compress image before creating a release
+
+```sh
+$ tar -cf patchOS-rpi4.img | pigz > patchOS-rpi.img.tar.gz
+```
+
+### Default users in patchOS
+
+The default user is `patch` with password `patch`.  
+The `root` user has password `root`. Safety third ;-)  
+There is minimal safety implemented – root cannot login via SSH.

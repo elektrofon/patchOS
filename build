@@ -107,8 +107,21 @@ systemctl enable jacktrip-client.service
 cp /home/patch/patchOS/services/http.service /etc/avahi/services/http.service
 systemctl enable avahi-daemon
 
-# Cleanup
+# Cleanup #
+###########
+
+# Remove unneeded locales
+shopt -s extglob
+rm -rvf /usr/share/locale/!(en_US|locale.alias)
+
+# Restore DNS conf
 mv /etc/resolv.conf.tmp /etc/resolv.conf
+
+# Remove local build directories
 rm -Rf /home/patch/patchOS/packages
+
+# Remove unneeded packages
 pacman -Rsu git base-devel --noconfirm
+
+# Clean pacman cache
 yes | pacman -Scc
