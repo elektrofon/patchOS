@@ -90,7 +90,6 @@ cp /home/patch/patchOS/services/jack.service /etc/systemd/system/jack.service
 chmod 644 /etc/systemd/system/jack.service
 mkdir -p /home/patch/.config/jack
 cp /home/patch/patchOS/packages/jack/jack.conf /home/patch/.config/jack/jack.conf
-systemctl enable jack.service
 
 # Configure jack service to start/stop on ES-8 connect/disconnect
 cp /home/patch/patchOS/es8/es8.rules /etc/udev/rules.d/es8.rules
@@ -100,8 +99,6 @@ cp /home/patch/patchOS/services/jacktrip-server.service /etc/systemd/system/jack
 cp /home/patch/patchOS/services/jacktrip-client.service /etc/systemd/system/jacktrip-client.service
 chmod 644 /etc/systemd/system/jacktrip-server.service
 chmod 644 /etc/systemd/system/jacktrip-client.service
-systemctl enable jacktrip-server.service
-systemctl enable jacktrip-client.service
 
 # Enable and start mDNS service
 cp /home/patch/patchOS/services/http.service /etc/avahi/services/http.service

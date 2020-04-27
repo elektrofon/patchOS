@@ -4549,6 +4549,14 @@ body.loading:after {
   border-width: 0.25em;
   z-index: 1001; }
 
+.shutdown-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  color: #D0D1CD; }
+
 .debug-info {
   display: none; }
 

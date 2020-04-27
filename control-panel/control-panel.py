@@ -1,5 +1,6 @@
 import os
 import sys
+from subprocess import call
 import argparse
 from time import sleep
 from threading import Thread, Event
@@ -7,6 +8,8 @@ import urllib.request
 import dbus
 from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
+
+debug = False
 
 parser = argparse.ArgumentParser(description='patchOS control panel')
 parser.add_argument('--port', dest='port', type=int, default=80)
@@ -23,37 +26,6 @@ manager = dbus.Interface(
     'org.freedesktop.systemd1.Manager'
 )
 
-jackService = bus.get_object(
-    'org.freedesktop.systemd1',
-    object_path = manager.GetUnit('jack.service')
-)
-
-jacktripServerService = bus.get_object(
-    'org.freedesktop.systemd1',
-    object_path = manager.GetUnit('jacktrip-server.service')
-)
-
-jacktripClientService = bus.get_object(
-    'org.freedesktop.systemd1',
-    object_path = manager.GetUnit('jacktrip-client.service')
-)
-
-jackServiceInterface = dbus.Interface(
-    jackService,
-    dbus_interface = 'org.freedesktop.DBus.Properties'
-)
-
-jacktripServerServiceInterface = dbus.Interface(
-    jacktripServerService,
-    dbus_interface ='org.freedesktop.DBus.Properties'
-)
-
-jacktripClientServiceInterface = dbus.Interface(
-    jacktripClientService,
-    dbus_interface = 'org.freedesktop.DBus.Properties'
-)
-
-debug = False
 clientCount = 0
 
 app = Flask(__name__)
@@ -66,12 +38,54 @@ thread = Thread()
 thread_stop_event = Event()
 
 def getJackServiceStatus():
-    return jackServiceInterface.Get('org.freedesktop.systemd1.Unit', 'ActiveState')
+    status = 'inactive'
 
+    try:
+        jackService = bus.get_object(
+            'org.freedesktop.systemd1',
+            object_path = manager.GetUnit('jack.service')
+        )
+
+        jackServiceInterface = dbus.Interface(
+            jackService,
+            dbus_interface = 'org.freedesktop.DBus.Properties'
+        )
+
+        status = jackServiceInterface.Get('org.freedesktop.systemd1.Unit', 'ActiveState')
+    except:
+        pass
+
+    return status
 
 def getJacktripServiceStatus():
-    serverStatus = jacktripServerServiceInterface.Get('org.freedesktop.systemd1.Unit', 'ActiveState')
-    clientStatus = jacktripClientServiceInterface.Get('org.freedesktop.systemd1.Unit', 'ActiveState')
+    serverStatus = 'inactive'
+    clientStatus = 'inactive'
+
+    try:
+        jacktripServerService = bus.get_object(
+            'org.freedesktop.systemd1',
+            object_path = manager.GetUnit('jacktrip-server.service')
+        )
+
+        jacktripClientService = bus.get_object(
+            'org.freedesktop.systemd1',
+            object_path = manager.GetUnit('jacktrip-client.service')
+        )
+
+        jacktripServerServiceInterface = dbus.Interface(
+            jacktripServerService,
+            dbus_interface ='org.freedesktop.DBus.Properties'
+        )
+
+        jacktripClientServiceInterface = dbus.Interface(
+            jacktripClientService,
+            dbus_interface = 'org.freedesktop.DBus.Properties'
+        )
+
+        serverStatus = jacktripServerServiceInterface.Get('org.freedesktop.systemd1.Unit', 'ActiveState')
+        clientStatus = jacktripClientServiceInterface.Get('org.freedesktop.systemd1.Unit', 'ActiveState')
+    except:
+        pass
 
     if serverStatus == 'inactive' and clientStatus == 'inactive':
         return {'status': 'inactive', 'mode': 'undefined'}
@@ -163,6 +177,11 @@ def queryStatus():
 @socketio.on('externalIp?')
 def queryExternalIp():
     emit('externalIp', urllib.request.urlopen('https://ident.me').read().decode('utf8'))
+
+
+@socketio.on('shutdown?')
+def queryExternalIp():
+    call("shutdown now", shell=True)
 
 
 if __name__ == "__main__":

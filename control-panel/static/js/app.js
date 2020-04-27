@@ -10,6 +10,7 @@ const connectToServerButton = document.querySelector('.connect-to-server-button'
 const serverIpInput = document.querySelector('input[name="serverIp"]');
 const startServerButton = document.querySelector('.start-server-button');
 const stopButtons = document.querySelectorAll('.stop-button');
+const shutdownButton = document.querySelectorAll('.shutdown-button');
 const startupViewElement = document.querySelector('.startup-view');
 const audioDeviceDisconnectedViewElement = document.querySelector('.audio-device-disconnected-view');
 const serverRunningViewElement = document.querySelector('.server-running-view');
@@ -39,7 +40,8 @@ const states = [
 	'client-active',
 	'server-failed',
 	'client-failed',
-	'stopping'
+	'stopping',
+	'shutting-down'
 ];
 
 let state = 'inactive';
@@ -112,8 +114,8 @@ function onStatus(data) {
 	}
 	// Set status UI elements <--
 
-	// Handle inactive jack service
-	if (jackStatus == 'inactive') {
+	// Handle inactive/failed jack service
+	if (jackStatus != 'active') {
 		state = 'audio-device-disconnected';
 
 		showView(audioDeviceDisconnectedViewElement);
@@ -121,6 +123,8 @@ function onStatus(data) {
 		document.body.classList.remove('loading');
 
 		return;
+	} else if (state == 'audio-device-disconnected') {
+		state = 'inactive';
 	}
 
 	// Handle stray failed jacktrip service
@@ -192,6 +196,8 @@ function onStatus(data) {
 
 			break;
 		case 'stopping':
+			break;
+		case 'shutting-down':
 			break;
 	}
 
@@ -271,4 +277,12 @@ function stop() {
 	disableInputs();
 
 	socket.emit('jacktrip-stop');
+}
+
+function shutdown() {
+	state = 'shutting-down';
+
+	document.body.classList.add('loading');
+
+	socket.emit('shutdown?');
 }

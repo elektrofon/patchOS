@@ -22,9 +22,16 @@
 
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/app.css') }}">
 
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 </head>
 <body class="loading">
+	<button class="button is-medium is-rounded shutdown-button" onclick="shutdown()">
+		<span class="icon is-medium">
+			<i class="fas fa-power-off fa-lg"></i>
+		</span>
+	</button>
+
 	<section class="section">
 		<div class="container">
 			<div class="tile is-ancestor">
