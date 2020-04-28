@@ -119,3 +119,10 @@ div {
         }
     }
 }
+
+.tile {
+	&.is-centered {
+		align-items: center;
+		justify-content: center;
+	}
+}
