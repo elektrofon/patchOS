@@ -20,7 +20,7 @@
 	<meta name="msapplication-config" content="/static/img/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 
-	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/app.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/app.css') }}?v={{ version }}">
 
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
@@ -144,6 +144,6 @@
 		</div>
 	</section>
 
-	<script src="{{ url_for('static', filename = 'js/app.js') }}"></script>
+	<script src="{{ url_for('static', filename = 'js/app.js') }}?v={{ version }}"></script>
 </body>
 </html>

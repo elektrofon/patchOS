@@ -2,6 +2,7 @@ import os
 import sys
 from subprocess import call
 import argparse
+import time
 from time import sleep
 from threading import Thread, Event
 import urllib.request
@@ -10,6 +11,15 @@ from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 
 debug = False
+
+firstRunTimestamp = str(int(time.time()))
+
+if os.path.isfile('has-run-before'):
+    with open('has-run-before', 'r') as f:
+        firstRunTimestamp = f.read()
+else:
+    with open('has-run-before', 'w+') as f:
+        f.write(firstRunTimestamp)
 
 parser = argparse.ArgumentParser(description='patchOS control panel')
 parser.add_argument('--port', dest='port', type=int, default=80)
@@ -114,6 +124,7 @@ def index():
             lastConnectedIp = f.read().replace('JACKTRIP_SERVER_IP=', '')
 
     templateData = {
+        'version': firstRunTimestamp,
         'lastConnectedIp': lastConnectedIp,
         'externalIp': externalIp
     }
