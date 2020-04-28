@@ -1,3 +1,5 @@
+<p align="right" width="100%"><a href="https://paypal.me/RuneWarhuus" alt="Donate"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg"></a></p>
+
 <img src="./assets/logo.svg" width="300"/>
 <img src="./assets/diagram.svg" width="100%"/>
 
