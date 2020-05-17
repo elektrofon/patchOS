@@ -11,7 +11,10 @@ patchOS is an operating system for the Raspberry PI 4 that makes two modular syn
 
 - Raspberry PI 4 (Raspberry PI 3b+ should also work, but is untested)
 - 4GB+ SD card
+
+### One of these audio devices
 - [Expert Sleepers ES-8 module](https://www.expert-sleepers.co.uk/es8.html)
+- [Expert Sleepers ES-9 module](https://www.expert-sleepers.co.uk/es9.html)
 
 ## How to install
 
@@ -22,7 +25,7 @@ patchOS is an operating system for the Raspberry PI 4 that makes two modular syn
 ## How to use
 
 1. Connect an ethernet cable to the Raspberry PI 4 network port.
-2. Connect your ES-8 to one of the USB ports of the Raspberry PI 4.
+2. Connect your audio device to one of the USB ports of the Raspberry PI 4.
 3. On your phone open your web browser and navigate to `http://patchos.local`.
 
 You will be met with a simple control panel:
@@ -31,7 +34,7 @@ You will be met with a simple control panel:
   <img src="./assets/screenshot.svg" width="300"/>
 </p>
 
-Input 1-4 on the ES-8 are sent to the peer,  
+Input 1-4 on the audio device are sent to the peer,  
 and output 1-4 receives signals from the peer.
 
 ### Special note for Android users
