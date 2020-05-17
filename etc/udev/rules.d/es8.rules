@@ -1,0 +1,3 @@
+ACTION=="add", SUBSYSTEM=="sound", ENV{ID_MODEL}=="ES-8",RUN+="/bin/sed -ir 's/\"hw:.*\"/\"hw:ES8\"/' /home/patch/.config/jack/jack.conf",RUN+="/bin/systemctl restart jack.service"
+
+ACTION=="remove", SUBSYSTEM=="sound", ENV{ID_MODEL}=="ES-8",RUN+="/bin/systemctl stop jack.service"

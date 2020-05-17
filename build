@@ -54,6 +54,28 @@ cd /home/patch
 # Set bashrc variable
 echo "TERM=ansi" >> .bashrc
 
+# Install fakeroot-tcp. Fakeroot has stopped working in chroot
+# FIXME: This should be uneccessary. Find out why we cannot run standard fakeroot
+cd /home/patch/patchOS/packages/fakeroot-tcp
+curl http://ftp.debian.org/debian/pool/main/f/fakeroot/fakeroot_1.24.orig.tar.gz | tar xvz
+cd fakeroot-1.24
+export PYTHONPATH="${PWD}:${PYTHONPATH}"
+./configure --prefix=/opt/fakeroot \
+    --libdir=/opt/fakeroot/libs \
+    --disable-static \
+    --with-ipc=tcp
+make
+make install
+cd /home/patch/patchOS/packages/fakeroot-tcp
+su patch <<'EOF'
+export PATH="/opt/fakeroot/bin/:$PATH"
+makepkg -sA --skipchecksums --noconfirm
+export PATH="/usr/bin/:$PATH"
+EOF
+pacman -R --noconfirm fakeroot
+cd /home/patch/patchOS/packages/fakeroot-tcp
+pacman -U *armv7h.pkg.tar.xz --noconfirm
+
 # Build jack from source
 cd /home/patch/patchOS/packages/jack
 su patch -c "makepkg -sA --skipchecksums --noconfirm"
@@ -81,27 +103,27 @@ pacman -U *armv7h.pkg.tar.xz --noconfirm
 cat /home/patch/patchOS/etc/motd > /etc/motd
 
 # Install control-panel service
-cp /home/patch/patchOS/services/control-panel.service /etc/systemd/system/control-panel.service
+cp /home/patch/patchOS/etc/systemd/system/control-panel.service /etc/systemd/system/control-panel.service
 chmod 644 /etc/systemd/system/control-panel.service
 systemctl enable control-panel.service
 
 # Install jack service
-cp /home/patch/patchOS/services/jack.service /etc/systemd/system/jack.service
+cp /home/patch/patchOS/etc/systemd/system/jack.service /etc/systemd/system/jack.service
 chmod 644 /etc/systemd/system/jack.service
 mkdir -p /home/patch/.config/jack
 cp /home/patch/patchOS/packages/jack/jack.conf /home/patch/.config/jack/jack.conf
 
-# Configure jack service to start/stop on ES-8 connect/disconnect
-cp /home/patch/patchOS/es8/es8.rules /etc/udev/rules.d/es8.rules
+# Configure jack service to start/stop when USB devices connects/disconnects
+cp /home/patch/patchOS/etc/udev/rules.d/*.rules /etc/udev/rules.d/
 
 # Install jacktrip services (server and client)
-cp /home/patch/patchOS/services/jacktrip-server.service /etc/systemd/system/jacktrip-server.service
-cp /home/patch/patchOS/services/jacktrip-client.service /etc/systemd/system/jacktrip-client.service
+cp /home/patch/patchOS/etc/systemd/system/jacktrip-server.service /etc/systemd/system/jacktrip-server.service
+cp /home/patch/patchOS/etc/systemd/system/jacktrip-client.service /etc/systemd/system/jacktrip-client.service
 chmod 644 /etc/systemd/system/jacktrip-server.service
 chmod 644 /etc/systemd/system/jacktrip-client.service
 
 # Enable and start mDNS service
-cp /home/patch/patchOS/services/http.service /etc/avahi/services/http.service
+cp /home/patch/patchOS/etc/systemd/system/http.service /etc/avahi/services/http.service
 systemctl enable avahi-daemon
 
 # Cleanup #
