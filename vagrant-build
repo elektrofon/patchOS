@@ -1,4 +1,4 @@
-#!/bin/sh -xe
+#!/bin/bash -xe
 
 IMAGE_NAME="patchOS-rpi4.img"
 ARCH_LINUX_TARBALL="ArchLinuxARM-rpi-4-latest.tar.gz"
@@ -65,6 +65,21 @@ echo "[ STARTED  ] Setting up patchOS"
 sudo systemctl restart systemd-binfmt.service
 sudo systemd-nspawn -D /mnt usr/bin/build
 echo "[ FINISHED ] Setting up patchOS"
+
+# Build kernel if not built before
+if [ ! -d "/home/vagrant/linux" ] then
+	echo "[ STARTED  ] Building kernel"
+	/vagrant/kernel-build
+	echo "[ FINISHED] Building kernel"
+fi
+
+# Install kernel
+echo "[ STARTED  ] Installing kernel"
+sudo cp /home/vagrant/linux/arch/arm/boot/zImage /mnt/boot/kernel7.img
+sudo cp /home/vagrant/linux/arch/arm/boot/dts/*.dtb /mnt/boot/
+sudo cp /home/vagrant/linux/arch/arm/boot/dts/overlays/*.dtb* /mnt/boot/overlays/
+sudo cp /home/vagrant/linux/arch/arm/boot/dts/overlays/README /mnt/boot/overlays/
+echo "[ FINISHED ] Installing kernel"
 
 # Cleanup
 echo "[ STARTED  ] Cleaning up"

@@ -1,0 +1,18 @@
+#!/bin/bash -xe
+
+git clone --depth=1 https://github.com/raspberrypi/linux.git -b rpi-4.19.y-rt /home/vagrant/linux
+cp /vagrant/linux/* /home/vagrant/linux
+cd /home/vagrant/linux
+mv config .config
+
+# Fix "multiple definition of `yylloc'" lexer error
+sed -i 's/^YYLTYPE yylloc;$/extern YYLTYPE yylloc;/' scripts/dtc/dtc-lexer.l
+
+# Apply Preepmt-RT patch
+curl http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.40-rt24.patch.gz | gunzip > patch-5.4.40-rt24.patch
+git apply patch-5.4.40-rt24.patch
+
+KERNEL=kernel7l
+make -j $(($(nproc) + 1)) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- prepare
+make -j $(($(nproc) + 1)) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
+sudo env PATH=$PATH make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=/mnt modules_install
