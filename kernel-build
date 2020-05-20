@@ -12,6 +12,7 @@ sed -i 's/^YYLTYPE yylloc;$/extern YYLTYPE yylloc;/' scripts/dtc/dtc-lexer.l
 curl http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.40-rt24.patch.gz | gunzip > patch-5.4.40-rt24.patch
 git apply patch-5.4.40-rt24.patch
 
+PATH=$PATH:/home/vagrant/tools/arm-bcm2708/arm-linux-gnueabihf/bin
 KERNEL=kernel7l
 make -j $(($(nproc) + 1)) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- prepare
 make -j $(($(nproc) + 1)) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs

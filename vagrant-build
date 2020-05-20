@@ -7,7 +7,7 @@ cd /home/vagrant
 
 # Clean up existing build
 echo "[ STARTED  ] Cleaning up existing build"
-rm -Rf tmp
+sudo rm -Rf tmp
 mkdir tmp
 cd tmp
 echo "[ FINISHED ] Cleaning up existing build"
@@ -67,7 +67,7 @@ sudo systemd-nspawn -D /mnt usr/bin/build
 echo "[ FINISHED ] Setting up patchOS"
 
 # Build kernel if not built before
-if [ ! -d "/home/vagrant/linux" ] then
+if [ ! -d /home/vagrant/linux ]; then
 	echo "[ STARTED  ] Building kernel"
 	/vagrant/kernel-build
 	echo "[ FINISHED] Building kernel"
