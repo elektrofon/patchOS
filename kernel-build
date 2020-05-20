@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-git clone --depth=1 https://github.com/raspberrypi/linux.git -b rpi-4.19.y-rt /home/vagrant/linux
+git clone --depth=1 https://github.com/raspberrypi/linux.git -b rpi-5.4.y /home/vagrant/linux
 cp /vagrant/linux/* /home/vagrant/linux
 cd /home/vagrant/linux
 mv config .config
