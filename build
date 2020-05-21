@@ -35,9 +35,6 @@ pacman -S --noconfirm \
 	python-flask-socketio \
 	python-eventlet
 
-# Enable all cores for building
-echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
-
 # Rename default user
 sed -i "s/alarm/patch/g" /etc/passwd /etc/group /etc/shadow
 mv /home/alarm "/home/patch"
