@@ -17,7 +17,7 @@ The reason for halting and upping is to load any new kernel updates that was ins
 ### 3. Build patchOS
 
 ```sh
-$ vagrant ssh -c "sudo /vagrant/vagrant-build"
+$ vagrant ssh -c "/vagrant/vagrant-build"
 ```
 
 This will take about 40 minutes on a half decent laptop.
