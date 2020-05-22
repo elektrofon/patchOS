@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 IMAGE_NAME="patchOS-rpi4.img"
-ARCH_LINUX_TARBALL="ArchLinuxARM-rpi-4-latest.tar.gz"
+ARCH_LINUX_TARBALL="ArchLinuxARM-rpi-4-aarch64-2020-05-06.tar.gz"
 
 cd /home/vagrant
 
@@ -41,7 +41,7 @@ echo "[ FINISHED ] mounting partitions"
 
 # Download Arch Linux ARM
 echo "[ STARTED  ] Downloading Arch Linux ARM"
-wget http://os.archlinuxarm.org/os/${ARCH_LINUX_TARBALL}
+wget https://olegtown.pw/Public/ArchLinuxArm/RPi4/rootfs/${ARCH_LINUX_TARBALL}
 echo "[ FINISHED ] Downloading Arch Linux ARM"
 
 # Extract Arch Linux ARM to /mnt
@@ -51,7 +51,7 @@ echo "[ FINISHED ] Extracting Arch Linux ARM"
 
 # Enable ARM execution on x86_64
 echo "[ STARTED  ] Enabling ARM execution on x86_64"
-sudo cp /usr/bin/qemu-arm-static /mnt/usr/bin/
+sudo cp /usr/bin/qemu-aaarch64-static /mnt/usr/bin/
 echo "[ FINISHED ] Enabling ARM execution on x86_64"
 
 # Copy patchOS to Arch Linux ARM
@@ -75,10 +75,10 @@ fi
 
 # Install kernel
 echo "[ STARTED  ] Installing kernel"
-sudo cp /home/vagrant/linux/arch/arm/boot/zImage /mnt/boot/kernel7.img
-sudo cp /home/vagrant/linux/arch/arm/boot/dts/*.dtb /mnt/boot/
-sudo cp /home/vagrant/linux/arch/arm/boot/dts/overlays/*.dtb* /mnt/boot/overlays/
-sudo cp /home/vagrant/linux/arch/arm/boot/dts/overlays/README /mnt/boot/overlays/
+sudo cp /home/vagrant/linux/arch/arm64/boot/Image /mnt/boot/kernel8.img
+sudo cp /home/vagrant/linux/arch/arm64/boot/dts/broadcom/*.dtb /mnt/boot/
+sudo cp /home/vagrant/linux/arch/arm64/boot/dts/overlays/*.dtb* /mnt/boot/overlays/
+sudo cp /home/vagrant/linux/arch/arm64/boot/dts/overlays/README /mnt/boot/overlays/
 echo "[ FINISHED ] Installing kernel"
 
 # Cleanup

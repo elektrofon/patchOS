@@ -3,7 +3,7 @@ pkgver=1.2.0
 _commit=5dd7740
 pkgrel=1
 pkgdesc='JackTrip is a Linux, Mac OSX, or Windows multi-machine audio system used for network music performance over the Internet.'
-arch=('i686' 'x86_64' 'armv7h')
+arch=('i686' 'x86_64' 'aarch64')
 license=('MIT' 'custom')
 depends=('jack' 'qt5-base' 'rtaudio')
 conflicts=("$pkgname-git")
@@ -13,17 +13,16 @@ sha256sums=('SKIP')
 
 prepare() {
 	mv $srcdir/jacktrip-jacktrip* $srcdir/$pkgname
-	cp ../Makefile* $srcdir/$pkgname/src
-	cp ../.qmake.stash $srcdir/$pkgname/src
-	mkdir -p $srcdir/$pkgname/src/release
 }
 
 build() {
 	cd "$pkgname/src"
-	make -f Makefile.Release
+	qmake-qt5 -spec linux-g++ jacktrip.pro
+	make release
 }
 
 package() {
+	depends+=('libasound.so' 'libjack.so')
 	cd "$srcdir/$pkgname/src"
 	install -Dm0755 jacktrip "$pkgdir/usr/bin/jacktrip"
 }
