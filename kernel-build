@@ -1,6 +1,7 @@
 #!/bin/bash -xe
 
-git clone --depth=1 https://github.com/raspberrypi/linux.git -b rpi-5.4.y /home/vagrant/linux
+sudo rm -Rf /home/vagrant/linux
+git clone --depth=1 https://github.com/raspberrypi/linux.git -b rpi-5.6.y /home/vagrant/linux
 cp /vagrant/linux/* /home/vagrant/linux
 cd /home/vagrant/linux
 mv config .config
@@ -9,11 +10,11 @@ mv config .config
 sed -i 's/^YYLTYPE yylloc;$/extern YYLTYPE yylloc;/' scripts/dtc/dtc-lexer.l
 
 # Apply Preepmt-RT patch
-curl http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.40-rt24.patch.gz | gunzip > patch-5.4.40-rt24.patch
-git apply patch-5.4.40-rt24.patch
+curl http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.6/patch-5.6.10-rt5.patch.gz | gunzip > rt.patch
+git apply rt.patch
 
-PATH=$PATH:/home/vagrant/tools/arm-bcm2708/arm-linux-gnueabihf/bin
-KERNEL=kernel7l
-make -j $(($(nproc) + 1)) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- prepare
-make -j $(($(nproc) + 1)) ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
-sudo env PATH=$PATH make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=/mnt modules_install
+# PATH=$PATH:/home/vagrant/tools/arm-bcm2708/arm-linux-gnueabihf/bin
+# KERNEL=kernel7l
+make -j $(($(nproc) + 1)) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- prepare
+make -j $(($(nproc) + 1)) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs
+sudo env PATH=$PATH make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=/mnt modules_install

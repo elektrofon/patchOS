@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     sudo echo "Server = http://mirror.archlinux.no/\\$repo/os/\\$arch" > /etc/pacman.d/mirrorlist
     sudo pacman -Syu --noconfirm
-    sudo pacman -S base-devel xmlto kmod inetutils libelf bc bison flex ncurses parted dosfstools gcc-libs wget rsync git python2 --noconfirm
+    sudo pacman -S base-devel aarch64-linux-gnu-gcc xmlto kmod inetutils libelf bc bison flex ncurses parted dosfstools gcc-libs wget rsync git python2 --noconfirm
     sudo echo 'MAKEFLAGS="-j$(($(nproc) + 1))"' >> /etc/makepkg.conf
     su vagrant -c "git clone https://aur.archlinux.org/yay-git.git"
     cd yay-git
@@ -27,6 +27,5 @@ Vagrant.configure("2") do |config|
     wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh
     chmod +x pishrink.sh
     sudo mv pishrink.sh /usr/local/bin
-    su vagrant -c "git clone --depth=1 https://github.com/raspberrypi/tools ~/tools"
   SHELL
 end
