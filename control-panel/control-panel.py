@@ -5,12 +5,16 @@ import argparse
 import time
 from time import sleep
 from threading import Thread, Event
+import ssl
 import urllib.request
 import dbus
 from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 
 debug = False
+
+# Create a default SSL certificate. It stopped working out of the box on Python 3.8
+ssl._create_default_https_context = ssl._create_unverified_context
 
 firstRunTimestamp = str(int(time.time()))
 
