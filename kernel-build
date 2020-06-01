@@ -10,7 +10,7 @@ mv config .config
 sed -i 's/^YYLTYPE yylloc;$/extern YYLTYPE yylloc;/' scripts/dtc/dtc-lexer.l
 
 # Apply Preepmt-RT patch
-curl http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.6/patch-5.6.10-rt5.patch.gz | gunzip > rt.patch
+curl http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.6/patch-5.6.14-rt7.patch.gz | gunzip > rt.patch
 git apply rt.patch
 
 # PATH=$PATH:/home/vagrant/tools/arm-bcm2708/arm-linux-gnueabihf/bin
