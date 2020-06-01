@@ -51,7 +51,7 @@ echo "[ FINISHED ] Extracting Arch Linux ARM"
 
 # Enable ARM execution on x86_64
 echo "[ STARTED  ] Enabling ARM execution on x86_64"
-sudo cp /usr/bin/qemu-aaarch64-static /mnt/usr/bin/
+sudo cp /usr/bin/qemu-aarch64-static /mnt/usr/bin/
 echo "[ FINISHED ] Enabling ARM execution on x86_64"
 
 # Copy patchOS to Arch Linux ARM
